@@ -1,0 +1,243 @@
+@{
+    Layout = null;
+    var courses = ViewBag.Courses as List<AttendanceManagementSystem.Data.Entities.CourseAssignment>;
+    var attendanceRecords = ViewBag.AttendanceRecords as List<AttendanceManagementSystem.Data.Entities.Attendance>;
+    var selectedAssignmentId = ViewBag.SelectedAssignmentId as int?;
+    var selectedDate = ViewBag.SelectedDate as DateTime?;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Attendance</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: #00b894; font-size: 28px; }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: white;
+        }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .form-group { margin-bottom: 20px; }
+        label { font-weight: 600; color: #333; display: block; margin-bottom: 8px; }
+        select, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-success { background: #28a745; color: white; }
+        .badge-danger { background: #dc3545; color: white; }
+        .badge-warning { background: #ffc107; color: #333; }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state i { font-size: 64px; margin-bottom: 20px; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> View Attendance</h1>
+            <a href="/Teacher/Dashboard" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #333;">Select Course & Date</h2>
+            <form method="get" action="/Teacher/ViewAttendance">
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 20px; align-items: end;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Select Course</label>
+                        <select name="assignmentId" required>
+                            <option value="">-- Choose Course --</option>
+                            @if (courses != null)
+                            {
+                                foreach (var course in courses)
+                                {
+                                    var isSelected = selectedAssignmentId == course.AssignmentId ? "selected" : "";
+                                    <option value="@course.AssignmentId" selected="@isSelected">
+                                        @course.Course?.CourseCode - @course.Course?.CourseName (@course.Section?.SectionName)
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Select Date</label>
+                        <input type="date" name="date" value="@(selectedDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="height: 42px;">
+                        <i class="fas fa-search"></i> View
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        @if (attendanceRecords != null)
+        {
+            var totalStudents = attendanceRecords.Count;
+            var presentCount = attendanceRecords.Count(a => a.Status == "Present");
+            var absentCount = attendanceRecords.Count(a => a.Status == "Absent");
+            var leaveCount = attendanceRecords.Count(a => a.Status == "Leave");
+            var percentage = totalStudents > 0 ? (presentCount * 100.0 / totalStudents) : 0;
+
+            <div class="stats">
+                <div class="stat-card" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
+                    <div class="stat-number" style="color: #1976d2;">@totalStudents</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9);">
+                    <div class="stat-number" style="color: #388e3c;">@presentCount</div>
+                    <div class="stat-label">Present</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ffebee, #ffcdd2);">
+                    <div class="stat-number" style="color: #d32f2f;">@absentCount</div>
+                    <div class="stat-label">Absent</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #fff8e1, #ffecb3);">
+                    <div class="stat-number" style="color: #f57c00;">@percentage.ToString("F1")%</div>
+                    <div class="stat-label">Attendance Rate</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: #333;">Attendance Details - @selectedDate?.ToString("MMMM dd, yyyy")</h2>
+                
+                @if (!attendanceRecords.Any())
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No attendance records for this date</p>
+                    </div>
+                }
+                else
+                {
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Marked Time</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in attendanceRecords)
+                            {
+                                <tr>
+                                    <td><strong>@record.Registration?.Student?.RollNumber</strong></td>
+                                    <td>@record.Registration?.Student?.User?.FullName</td>
+                                    <td>@record.Registration?.Student?.User?.Email</td>
+                                    <td>
+                                        @if (record.Status == "Present")
+                                        {
+                                            <span class="badge badge-success"><i class="fas fa-check"></i> Present</span>
+                                        }
+                                        else if (record.Status == "Absent")
+                                        {
+                                            <span class="badge badge-danger"><i class="fas fa-times"></i> Absent</span>
+                                        }
+                                        else if (record.Status == "Leave")
+                                        {
+                                            <span class="badge badge-warning"><i class="fas fa-plane"></i> Leave</span>
+                                        }
+                                    </td>
+                                    <td>@record.MarkedDate.ToString("hh:mm tt")</td>
+                                    <td>@(record.Remarks ?? "-")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>

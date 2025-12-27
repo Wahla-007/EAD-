@@ -1,0 +1,184 @@
+@model List<AttendanceManagementSystem.Data.Entities.CourseAssignment>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Courses</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: #00b894; font-size: 28px; }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: white;
+        }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        .course-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .course-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .course-icon {
+            font-size: 40px;
+            color: #00b894;
+            margin-right: 15px;
+        }
+        .course-code {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        .course-name {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .course-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .info-row {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .info-row i {
+            width: 20px;
+            color: #00b894;
+            margin-right: 10px;
+        }
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .btn-sm {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+        .empty-state {
+            background: white;
+            padding: 60px;
+            border-radius: 15px;
+            text-align: center;
+            color: #999;
+        }
+        .empty-state i { font-size: 64px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-book-open"></i> My Courses</h1>
+            <a href="/Teacher/Dashboard" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <p>No courses assigned to you yet</p>
+            </div>
+        }
+        else
+        {
+            <div class="courses-grid">
+                @foreach (var assignment in Model)
+                {
+                    <div class="course-card">
+                        <div class="course-header">
+                            <div class="course-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>
+                                <div class="course-code">@assignment.Course?.CourseCode</div>
+                            </div>
+                        </div>
+                        <div class="course-name">@assignment.Course?.CourseName</div>
+                        <div class="course-info">
+                            <div class="info-row">
+                                <i class="fas fa-users"></i>
+                                <span>Section: @assignment.Section?.SectionName</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-calendar"></i>
+                                <span>Semester: @assignment.Semester?.SemesterName</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-clock"></i>
+                                <span>Credit Hours: @assignment.Course?.CreditHours</span>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <a href="/Teacher/MarkAttendance?assignmentId=@assignment.AssignmentId" class="btn-sm btn-primary">
+                                <i class="fas fa-check-circle"></i> Mark Attendance
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>

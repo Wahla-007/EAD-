@@ -1,0 +1,74 @@
+@model Dictionary<string, decimal>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Attendance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 32px; color: #333; }
+        .btn { padding: 12px 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4); }
+        .attendance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .attendance-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .course-name { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px; }
+        .percentage { font-size: 48px; font-weight: 700; margin: 20px 0; }
+        .percentage.good { color: #38ef7d; }
+        .percentage.warning { color: #f093fb; }
+        .percentage.danger { color: #f5576c; }
+        .status { font-size: 14px; color: #666; }
+        .empty-state { text-align: center; padding: 80px 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calendar-check"></i> My Attendance</h1>
+            <a href="@Url.Action("Dashboard", "Student")" class="btn"><i class="fas fa-arrow-left"></i> Back</a>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="attendance-grid">
+                @foreach (var item in Model)
+                {
+                    var colorClass = item.Value >= 75 ? "good" : item.Value >= 60 ? "warning" : "danger";
+                    <div class="attendance-card">
+                        <div class="course-name">@item.Key</div>
+                        <div class="percentage @colorClass">@item.Value%</div>
+                        <div class="status">
+                            @if (item.Value >= 75)
+                            {
+                                <i class="fas fa-check-circle" style="color: #38ef7d;"></i> <span>Good Standing</span>
+                            }
+                            else if (item.Value >= 60)
+                            {
+                                <i class="fas fa-exclamation-triangle" style="color: #f093fb;"></i> <span>Warning</span>
+                            }
+                            else
+                            {
+                                <i class="fas fa-times-circle" style="color: #f5576c;"></i> <span>Below Required</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div style="font-size: 80px; color: #ddd; margin-bottom: 20px;"><i class="fas fa-calendar-times"></i></div>
+                <h2 style="color: #666; margin-bottom: 10px;">No Attendance Records</h2>
+                <p style="color: #999;">No attendance data available yet.</p>
+            </div>
+        }
+    </div>
+</body>
+</html>
