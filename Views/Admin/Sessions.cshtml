@@ -1,4 +1,4 @@
-@using System.Linq
+﻿@using System.Linq
 @model List<AttendanceManagementSystem.Data.Entities.Session>
 @{
     Layout = null;
@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#x1F393;</text></svg>">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Session Management - Admin</title>
@@ -136,7 +137,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-calendar-plus"></i> Create New Session</h3>
-                <button class="neo-modal-close" onclick="closeModal('createSessionModal')">×</button>
+                <button class="neo-modal-close" onclick="closeModal('createSessionModal')">Ã—</button>
             </div>
             <form method="post" action="/Admin/CreateSession">
                 <div class="neo-form-group">
@@ -163,7 +164,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-clock"></i> Add Semester to <span id="sessionNameLabel"></span></h3>
-                <button class="neo-modal-close" onclick="closeModal('createSemesterModal')">×</button>
+                <button class="neo-modal-close" onclick="closeModal('createSemesterModal')">Ã—</button>
             </div>
             <form method="post" action="/Admin/CreateSemester">
                 <input type="hidden" name="sessionId" id="semesterSessionId">
@@ -234,3 +235,4 @@
     </script>
 </body>
 </html>
+

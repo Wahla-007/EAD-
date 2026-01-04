@@ -1,4 +1,4 @@
-@model List<AttendanceManagementSystem.Data.Entities.Student>
+﻿@model List<AttendanceManagementSystem.Data.Entities.Student>
 @{
     Layout = null;
 }
@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#x1F393;</text></svg>">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Students - Attendance Management System</title>
@@ -133,7 +134,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-user-plus"></i> Add New Student</h3>
-                <button onclick="closeAddStudent()" class="neo-modal-close">×</button>
+                <button onclick="closeAddStudent()" class="neo-modal-close">Ã—</button>
             </div>
             <form action="/Admin/CreateStudent" method="post">
                 <div class="neo-form-group">
@@ -172,7 +173,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-users"></i> Assign to Section</h3>
-                <button onclick="closeModal()" class="neo-modal-close">×</button>
+                <button onclick="closeModal()" class="neo-modal-close">Ã—</button>
             </div>
             <form id="assignForm" method="post" action="/Admin/AssignStudentToSection">
                 <input type="hidden" id="studentId" name="studentId" />
@@ -199,7 +200,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-book"></i> Assign Course</h3>
-                <button onclick="closeCourseModal()" class="neo-modal-close">×</button>
+                <button onclick="closeCourseModal()" class="neo-modal-close">Ã—</button>
             </div>
             <form method="post" action="/Admin/AssignCourseToStudent">
                 <input type="hidden" id="courseStudentId" name="studentId" />
@@ -283,7 +284,7 @@
                     const isRegistered = data.registeredIds && data.registeredIds.includes(course.assignmentId);
                     const optionText = `${course.courseCode} - ${course.courseName} (${course.teacherName})`;
                     if (isRegistered) {
-                        select.innerHTML += `<option value="${course.assignmentId}" disabled>${optionText} ✓ Registered</option>`;
+                        select.innerHTML += `<option value="${course.assignmentId}" disabled>${optionText} âœ“ Registered</option>`;
                     } else {
                         select.innerHTML += `<option value="${course.assignmentId}">${optionText}</option>`;
                     }
@@ -293,3 +294,4 @@
     </script>
 </body>
 </html>
+
