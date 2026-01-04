@@ -84,7 +84,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AttendanceManagementDbContext>();
-    context.Database.EnsureCreated(); // Create SQLite database if not exists
+
+    // Ensure fresh start for demo data
+    context.Database.EnsureDeleted();
+    context.Database.EnsureCreated();
     SeedUsers.SeedTestUsers(context);
 }
 
