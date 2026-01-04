@@ -10,9 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Database Context
+// Database Context - Using SQLite for cloud deployment
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "AttendanceDB.db");
 builder.Services.AddDbContext<AttendanceManagementDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite($"Data Source={dbPath}"));
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -83,6 +84,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AttendanceManagementDbContext>();
+    context.Database.EnsureCreated(); // Create SQLite database if not exists
     SeedUsers.SeedTestUsers(context);
 }
 
