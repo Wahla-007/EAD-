@@ -6,14 +6,27 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
-# Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Runtime stage - use alpine for smaller image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
+
+# Create writable directory for SQLite database
+RUN mkdir -p /app/data && chmod 777 /app/data
+
 COPY --from=build /app/publish .
 
-# Expose port 8080 (DigitalOcean default)
-EXPOSE 8080
+# Environment variables
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV DOTNET_gcServer=0
+ENV DOTNET_GCHeapHardLimit=100000000
+
+# Expose port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/Login || exit 1
 
 ENTRYPOINT ["dotnet", "EAD_project.dll"]
