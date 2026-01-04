@@ -55,12 +55,16 @@ public static class SeedUsers
         // ========================================
         // 4. SEED SECTIONS
         // ========================================
-        if (!context.Sections.Any() && activeSemester != null)
+        if (!context.Sections.Any() && activeSemester != null && csDept != null)
         {
+            // Ensure we use the IDs from the tracked entities
+            var semesterId = activeSemester.SemesterId;
+            var deptId = csDept.DepartmentId;
+            
             context.Sections.AddRange(
-                new Section { SectionName = "CS-A", SemesterId = activeSemester.SemesterId },
-                new Section { SectionName = "CS-B", SemesterId = activeSemester.SemesterId },
-                new Section { SectionName = "SE-A", SemesterId = activeSemester.SemesterId }
+                new Section { SectionName = "CS-A", SemesterId = semesterId, DepartmentId = deptId, Capacity = 50, IsActive = true },
+                new Section { SectionName = "CS-B", SemesterId = semesterId, DepartmentId = deptId, Capacity = 50, IsActive = true },
+                new Section { SectionName = "SE-A", SemesterId = semesterId, DepartmentId = deptId, Capacity = 50, IsActive = true }
             );
             context.SaveChanges();
         }
@@ -72,12 +76,13 @@ public static class SeedUsers
         // ========================================
         if (!context.Courses.Any() && csDept != null)
         {
+             var deptId = csDept.DepartmentId;
             context.Courses.AddRange(
-                new Course { CourseCode = "CS101", CourseName = "Introduction to Programming", CreditHours = 3, DepartmentId = csDept.DepartmentId },
-                new Course { CourseCode = "CS201", CourseName = "Data Structures", CreditHours = 3, DepartmentId = csDept.DepartmentId },
-                new Course { CourseCode = "CS301", CourseName = "Database Systems", CreditHours = 3, DepartmentId = csDept.DepartmentId },
-                new Course { CourseCode = "CS401", CourseName = "Software Engineering", CreditHours = 3, DepartmentId = csDept.DepartmentId },
-                new Course { CourseCode = "CS501", CourseName = "Web Development", CreditHours = 3, DepartmentId = csDept.DepartmentId }
+                new Course { CourseCode = "CS101", CourseName = "Introduction to Programming", CreditHours = 3, DepartmentId = deptId, IsActive = true },
+                new Course { CourseCode = "CS201", CourseName = "Data Structures", CreditHours = 3, DepartmentId = deptId, IsActive = true },
+                new Course { CourseCode = "CS301", CourseName = "Database Systems", CreditHours = 3, DepartmentId = deptId, IsActive = true },
+                new Course { CourseCode = "CS401", CourseName = "Software Engineering", CreditHours = 3, DepartmentId = deptId, IsActive = true },
+                new Course { CourseCode = "CS501", CourseName = "Web Development", CreditHours = 3, DepartmentId = deptId, IsActive = true }
             );
             context.SaveChanges();
         }
