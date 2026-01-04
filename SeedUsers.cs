@@ -50,7 +50,7 @@ public static class SeedUsers
                 Email = "teacher1@ams.com",
                 PasswordHash = hash,
                 PasswordSalt = salt,
-                FullName = "John Teacher",
+                FullName = "Ahmed Khan",
                 Role = "Teacher",
                 IsFirstLogin = false,
                 IsActive = true,
@@ -64,6 +64,41 @@ public static class SeedUsers
             teacherUser.PasswordSalt = salt;
         }
 
+        // Add more teachers
+        var teacherNames = new[] {
+            ("teacher2", "Muhammad Ali", "teacher2@ams.com"),
+            ("teacher3", "Fatima Hassan", "teacher3@ams.com"),
+            ("teacher4", "Zainab Ahmed", "teacher4@ams.com"),
+            ("teacher5", "Usman Malik", "teacher5@ams.com")
+        };
+
+        foreach (var (username, fullName, email) in teacherNames)
+        {
+            var existingTeacher = context.Users.FirstOrDefault(u => u.Username == username);
+            if (existingTeacher == null)
+            {
+                var (hash, salt) = HashPassword("Test@123");
+                context.Users.Add(new User
+                {
+                    Username = username,
+                    Email = email,
+                    PasswordHash = hash,
+                    PasswordSalt = salt,
+                    FullName = fullName,
+                    Role = "Teacher",
+                    IsFirstLogin = false,
+                    IsActive = true,
+                    CreatedDate = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                var (hash, salt) = HashPassword("Test@123");
+                existingTeacher.PasswordHash = hash;
+                existingTeacher.PasswordSalt = salt;
+            }
+        }
+
         // Check/Create Student
         var studentUser = context.Users.FirstOrDefault(u => u.Username == "student1");
         if (studentUser == null)
@@ -75,7 +110,7 @@ public static class SeedUsers
                 Email = "student1@ams.com",
                 PasswordHash = hash,
                 PasswordSalt = salt,
-                FullName = "Jane Student",
+                FullName = "Bilal Ahmed",
                 Role = "Student",
                 IsFirstLogin = false,
                 IsActive = true,
@@ -87,6 +122,41 @@ public static class SeedUsers
             var (hash, salt) = HashPassword("Test@123");
             studentUser.PasswordHash = hash;
             studentUser.PasswordSalt = salt;
+        }
+
+        // Add more students
+        var studentNames = new[] {
+            ("student2", "Sara Khan", "student2@ams.com"),
+            ("student3", "Ali Raza", "student3@ams.com"),
+            ("student4", "Ayesha Malik", "student4@ams.com"),
+            ("student5", "Hassan Ali", "student5@ams.com")
+        };
+
+        foreach (var (username, fullName, email) in studentNames)
+        {
+            var existingStudent = context.Users.FirstOrDefault(u => u.Username == username);
+            if (existingStudent == null)
+            {
+                var (hash, salt) = HashPassword("Test@123");
+                context.Users.Add(new User
+                {
+                    Username = username,
+                    Email = email,
+                    PasswordHash = hash,
+                    PasswordSalt = salt,
+                    FullName = fullName,
+                    Role = "Student",
+                    IsFirstLogin = false,
+                    IsActive = true,
+                    CreatedDate = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                var (hash, salt) = HashPassword("Test@123");
+                existingStudent.PasswordHash = hash;
+                existingStudent.PasswordSalt = salt;
+            }
         }
 
         // Update all Pakistani teachers and students to have working passwords
