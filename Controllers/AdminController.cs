@@ -405,5 +405,230 @@ namespace AttendanceManagementSystem.Controllers
         {
             return View();
         }
+
+        // ==================== SESSION MANAGEMENT ====================
+
+        public async Task<IActionResult> Sessions()
+        {
+            var sessions = await _context.Sessions
+                .Include(s => s.Semesters)
+                .OrderByDescending(s => s.StartDate)
+                .ToListAsync();
+            return View(sessions);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSession(string sessionName, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                if (endDate <= startDate)
+                {
+                    TempData["Error"] = "End date must be after start date.";
+                    return RedirectToAction("Sessions");
+                }
+
+                var session = new Session
+                {
+                    SessionName = sessionName,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    IsActive = true
+                };
+                _context.Sessions.Add(session);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Session created successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction("Sessions");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSemester(int sessionId, string semesterName, int semesterNumber, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                if (endDate <= startDate)
+                {
+                    TempData["Error"] = "End date must be after start date.";
+                    return RedirectToAction("Sessions");
+                }
+
+                var semester = new Semester
+                {
+                    SessionId = sessionId,
+                    SemesterName = semesterName,
+                    SemesterNumber = semesterNumber,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    IsActive = true
+                };
+                _context.Semesters.Add(semester);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Semester created successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction("Sessions");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSemestersWithSections()
+        {
+            var semesters = await _context.Semesters
+                .Include(s => s.Session)
+                .Include(s => s.Sections)
+                .Select(s => new {
+                    s.SemesterId,
+                    s.SemesterName,
+                    SessionName = s.Session.SessionName,
+                    SectionCount = s.Sections.Count,
+                    s.StartDate,
+                    s.EndDate
+                })
+                .ToListAsync();
+            return Json(semesters);
+        }
+
+        // ==================== ASSIGN COURSES TO STUDENTS ====================
+
+        [HttpGet]
+        public async Task<IActionResult> GetCoursesForStudent(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null || student.SectionId == null)
+                return Json(new List<object>());
+
+            // Get courses available for student's section
+            var availableCourses = await _context.CourseAssignments
+                .Include(ca => ca.Course)
+                .Include(ca => ca.Teacher)
+                    .ThenInclude(t => t.User)
+                .Where(ca => ca.SectionId == student.SectionId && ca.IsActive)
+                .Select(ca => new {
+                    ca.AssignmentId,
+                    ca.Course.CourseCode,
+                    ca.Course.CourseName,
+                    TeacherName = ca.Teacher != null ? ca.Teacher.User.FullName : "Not Assigned"
+                })
+                .ToListAsync();
+
+            // Get already registered course ids
+            var registeredIds = await _context.StudentCourseRegistrations
+                .Where(r => r.StudentId == studentId && r.Status == "Registered")
+                .Select(r => r.AssignmentId)
+                .ToListAsync();
+
+            return Json(new { availableCourses, registeredIds });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignCourseToStudent(int studentId, int assignmentId)
+        {
+            try
+            {
+                // Check if already registered
+                var existing = await _context.StudentCourseRegistrations
+                    .FirstOrDefaultAsync(r => r.StudentId == studentId && r.AssignmentId == assignmentId);
+
+                if (existing != null)
+                {
+                    TempData["Error"] = "Student is already registered for this course.";
+                    return RedirectToAction("Students");
+                }
+
+                var registration = new StudentCourseRegistration
+                {
+                    StudentId = studentId,
+                    AssignmentId = assignmentId,
+                    RegistrationDate = DateTime.Now,
+                    Status = "Registered"
+                };
+
+                _context.StudentCourseRegistrations.Add(registration);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Course assigned to student successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction("Students");
+        }
+
+        // ==================== TIME-FILTERED REPORTS ====================
+
+        [HttpGet]
+        public async Task<IActionResult> GetFilteredReports(string reportType, DateTime? startDate, DateTime? endDate, int? semesterId)
+        {
+            IQueryable<Attendance> attendanceQuery = _context.Attendances;
+
+            // Apply date filters based on report type
+            if (reportType == "monthly" && startDate.HasValue && endDate.HasValue)
+            {
+                attendanceQuery = attendanceQuery.Where(a => a.AttendanceDate >= startDate.Value && a.AttendanceDate <= endDate.Value);
+            }
+            else if (reportType == "semester" && semesterId.HasValue)
+            {
+                var semesterAssignmentIds = await _context.CourseAssignments
+                    .Where(ca => ca.SemesterId == semesterId.Value)
+                    .Select(ca => ca.AssignmentId)
+                    .ToListAsync();
+
+                attendanceQuery = attendanceQuery.Where(a => semesterAssignmentIds.Contains(a.Registration.AssignmentId));
+            }
+            else if (reportType == "yearly" && startDate.HasValue)
+            {
+                var yearStart = new DateTime(startDate.Value.Year, 1, 1);
+                var yearEnd = new DateTime(startDate.Value.Year, 12, 31);
+                attendanceQuery = attendanceQuery.Where(a => a.AttendanceDate >= yearStart && a.AttendanceDate <= yearEnd);
+            }
+
+            var totalRecords = await attendanceQuery.CountAsync();
+            var presentCount = await attendanceQuery.Where(a => a.Status == "Present").CountAsync();
+            var absentCount = await attendanceQuery.Where(a => a.Status == "Absent").CountAsync();
+            var leaveCount = await attendanceQuery.Where(a => a.Status == "Leave").CountAsync();
+            var avgAttendance = totalRecords > 0 ? (presentCount * 100.0 / totalRecords) : 0;
+
+            // Get monthly breakdown for charts
+            var monthlyData = await attendanceQuery
+                .GroupBy(a => new { a.AttendanceDate.Year, a.AttendanceDate.Month })
+                .Select(g => new {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Total = g.Count(),
+                    Present = g.Count(x => x.Status == "Present")
+                })
+                .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                .ToListAsync();
+
+            return Json(new
+            {
+                totalRecords,
+                presentCount,
+                absentCount,
+                leaveCount,
+                avgAttendance,
+                monthlyData
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSemestersList()
+        {
+            var semesters = await _context.Semesters
+                .Include(s => s.Session)
+                .Select(s => new {
+                    s.SemesterId,
+                    Name = s.SemesterName + " (" + s.Session.SessionName + ")"
+                })
+                .ToListAsync();
+            return Json(semesters);
+        }
     }
 }

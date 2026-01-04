@@ -1,0 +1,322 @@
+@using System.Linq
+@model List<AttendanceManagementSystem.Data.Entities.Session>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Management - Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: #667eea; font-size: 28px; }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        tr:hover { background: #f8f9fa; }
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-secondary { background: #e2e3e5; color: #383d41; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            max-width: 90%;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .modal-header h3 { color: #667eea; }
+        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calendar-alt"></i> Session Management</h1>
+            <div>
+                <button class="btn btn-primary" onclick="openCreateSessionModal()">
+                    <i class="fas fa-plus"></i> Create Session
+                </button>
+                <a href="/Admin/Dashboard" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <!-- Sessions List -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-list"></i> All Sessions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Session Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Semesters</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var session in Model)
+                        {
+                            <tr>
+                                <td><strong>@session.SessionName</strong></td>
+                                <td>@session.StartDate.ToString("MMM dd, yyyy")</td>
+                                <td>@session.EndDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @if (session.IsActive)
+                                    {
+                                        <span class="badge badge-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">Inactive</span>
+                                    }
+                                </td>
+                                <td>@(session.Semesters?.Count ?? 0) semesters</td>
+                                <td>
+                                    <button class="btn btn-success" onclick="openCreateSemesterModal(@session.SessionId, '@session.SessionName')" style="padding: 8px 15px; font-size: 12px;">
+                                        <i class="fas fa-plus"></i> Add Semester
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                                <i class="fas fa-calendar-times" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+                                No sessions found. Create one to get started.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Semesters & Sections -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-layer-group"></i> Semesters & Sections</h2>
+            <div id="semestersList">
+                <!-- Loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Session Modal -->
+    <div class="modal" id="createSessionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> Create New Session</h3>
+                <button class="close-btn" onclick="closeModal('createSessionModal')">&times;</button>
+            </div>
+            <form method="post" action="/Admin/CreateSession">
+                <div class="form-group">
+                    <label>Session Name (e.g., 2025-2026)</label>
+                    <input type="text" name="sessionName" required placeholder="2025-2026">
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" name="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" name="endDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-save"></i> Create Session
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Semester Modal -->
+    <div class="modal" id="createSemesterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-clock"></i> Add Semester to <span id="sessionNameLabel"></span></h3>
+                <button class="close-btn" onclick="closeModal('createSemesterModal')">&times;</button>
+            </div>
+            <form method="post" action="/Admin/CreateSemester">
+                <input type="hidden" name="sessionId" id="semesterSessionId">
+                <div class="form-group">
+                    <label>Semester Name (e.g., Fall 2025)</label>
+                    <input type="text" name="semesterName" required placeholder="Fall 2025">
+                </div>
+                <div class="form-group">
+                    <label>Semester Number</label>
+                    <input type="number" name="semesterNumber" required min="1" max="8" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" name="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" name="endDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-save"></i> Create Semester
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openCreateSessionModal() {
+            document.getElementById('createSessionModal').classList.add('show');
+        }
+
+        function openCreateSemesterModal(sessionId, sessionName) {
+            document.getElementById('semesterSessionId').value = sessionId;
+            document.getElementById('sessionNameLabel').textContent = sessionName;
+            document.getElementById('createSemesterModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+            }
+        }
+
+        // Load semesters data
+        async function loadSemesters() {
+            try {
+                const response = await fetch('/Admin/GetSemestersWithSections');
+                const data = await response.json();
+                
+                let html = '<table><thead><tr><th>Semester</th><th>Session</th><th>Sections</th><th>Date Range</th></tr></thead><tbody>';
+                
+                if (data.length === 0) {
+                    html += '<tr><td colspan="4" style="text-align: center; padding: 30px; color: #999;">No semesters found</td></tr>';
+                } else {
+                    data.forEach(sem => {
+                        html += `<tr>
+                            <td><strong>${sem.semesterName}</strong></td>
+                            <td>${sem.sessionName}</td>
+                            <td>${sem.sectionCount} sections</td>
+                            <td>${new Date(sem.startDate).toLocaleDateString()} - ${new Date(sem.endDate).toLocaleDateString()}</td>
+                        </tr>`;
+                    });
+                }
+                
+                html += '</tbody></table>';
+                document.getElementById('semestersList').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading semesters:', error);
+            }
+        }
+
+        window.onload = loadSemesters;
+    </script>
+</body>
+</html>
