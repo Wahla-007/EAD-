@@ -125,14 +125,29 @@ public static class SeedUsers
         }
 
         // ========================================
-        // 7. SEED STUDENTS (Named Usernames)
+        // 7. SEED STUDENTS (20 Students)
         // ========================================
         var students = new[] {
             ("bilal.raza", "Bilal Raza", "bilal@ams.com", "F24-001"),
             ("sara.malik", "Sara Malik", "sara@ams.com", "F24-002"),
             ("hamza.shah", "Hamza Shah", "hamza@ams.com", "F24-003"),
             ("ayesha.sids", "Ayesha Siddiqui", "ayesha@ams.com", "F24-004"),
-            ("omar.farooq", "Omar Farooq", "omar@ams.com", "F24-005")
+            ("omar.farooq", "Omar Farooq", "omar@ams.com", "F24-005"),
+            ("zainab.abid", "Zainab Abid", "zainab.abid@ams.com", "F24-006"),
+            ("usman.tariq", "Usman Tariq", "usman.tariq@ams.com", "F24-007"),
+            ("hina.altaf", "Hina Altaf", "hina.altaf@ams.com", "F24-008"),
+            ("fahad.mustafa", "Fahad Mustafa", "fahad.mustafa@ams.com", "F24-009"),
+            ("mahnoor.baloch", "Mahnoor Baloch", "mahnoor.baloch@ams.com", "F24-010"),
+            ("rizwan.ahmed", "Rizwan Ahmed", "rizwan.ahmed@ams.com", "F24-011"),
+            ("sania.mirza", "Sania Mirza", "sania.mirza@ams.com", "F24-012"),
+            ("babar.azam", "Babar Azam", "babar.azam@ams.com", "F24-013"),
+            ("shaheen.afridi", "Shaheen Afridi", "shaheen.afridi@ams.com", "F24-014"),
+            ("naseem.shah", "Naseem Shah", "naseem.shah@ams.com", "F24-015"),
+            ("fatima.sana", "Fatima Sana", "fatima.sana@ams.com", "F24-016"),
+            ("arshad.nadeem", "Arshad Nadeem", "arshad.nadeem@ams.com", "F24-017"),
+            ("bismah.maroof", "Bismah Maroof", "bismah.maroof@ams.com", "F24-018"),
+            ("shadab.khan", "Shadab Khan", "shadab.khan@ams.com", "F24-019"),
+            ("sidra.ameen", "Sidra Ameen", "sidra.ameen@ams.com", "F24-020")
         };
 
         foreach (var (username, fullName, email, rollNo) in students)
@@ -220,37 +235,36 @@ public static class SeedUsers
             
             foreach (var assignment in assignments)
             {
-                // Assign 2 classes per week per assignment
                 var day1 = days[dayIndex % 5];
                 var day2 = days[(dayIndex + 2) % 5];
                 
                 context.Timetables.Add(new Timetable { AssignmentId = assignment.AssignmentId, DayOfWeek = (int)day1, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-" + (dayIndex + 1), IsActive = true });
                 context.Timetables.Add(new Timetable { AssignmentId = assignment.AssignmentId, DayOfWeek = (int)day2, StartTime = new TimeSpan(11, 0, 0), EndTime = new TimeSpan(12, 30, 0), RoomNumber = "Lab-" + (dayIndex + 1), IsActive = true });
-                
                 dayIndex++;
             }
             context.SaveChanges();
         }
 
         // ========================================
-        // 11. MARK RANDOM ATTENDANCE (For Stats)
+        // 11. MARK EXTENSIVE ATTENDANCE (30 Days)
         // ========================================
         var allRegistrations = context.StudentCourseRegistrations.Include(r => r.Assignment).ThenInclude(a => a.Teacher).ToList();
         
         if (allRegistrations.Any() && !context.Attendances.Any())
         {
-            // Generate for last 5 days (excluding weekend)
-            for (int i = 0; i < 5; i++)
+            // Generate for last 30 days (excluding weekend)
+            for (int i = 0; i < 30; i++)
             {
                 var date = DateTime.Today.AddDays(-i);
                 if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) continue;
 
                 foreach (var reg in allRegistrations)
                 {
-                    // 80% chance Present, 10% Absent, 10% Leave
+                    // Randomize attendance based on student persona? 
+                    // Let's just do weighted random: 75% Present, 15% Absent, 10% Leave
                     var roll = _rng.Next(100);
                     string status = "Present";
-                    if (roll > 80) status = "Absent";
+                    if (roll > 75) status = "Absent";
                     if (roll > 90) status = "Leave";
 
                     // Ensure marked by the teacher of that course
@@ -270,7 +284,7 @@ public static class SeedUsers
             context.SaveChanges();
         }
         
-        Console.WriteLine("DB Seeded Successfully with Rich Data!");
+        Console.WriteLine("DB Seeded Successfully with 20 Students and Rich History!");
     }
 
     private static User EnsureUser(AttendanceManagementDbContext context, string username, string email, string fullName, string role, string? profileImage)
