@@ -1,4 +1,4 @@
-// Comprehensive seed script with Pakistani names and full data
+// Comprehensive seed script with Pakistani names, correct usernames, and full data population
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +7,8 @@ using AttendanceManagementSystem.Data.Entities;
 
 public static class SeedUsers
 {
+    private static Random _rng = new Random();
+
     public static void SeedTestUsers(AttendanceManagementDbContext context)
     {
         // ========================================
@@ -50,6 +52,7 @@ public static class SeedUsers
 
         var activeSemester = context.Semesters.FirstOrDefault(s => s.IsActive);
         var csDept = context.Departments.FirstOrDefault(d => d.DepartmentCode == "CS");
+        var seDept = context.Departments.FirstOrDefault(d => d.DepartmentCode == "SE");
 
         // ========================================
         // 3. SEED SECTIONS
@@ -57,30 +60,32 @@ public static class SeedUsers
         if (!context.Sections.Any() && activeSemester != null && csDept != null)
         {
             var semesterId = activeSemester.SemesterId;
-            var deptId = csDept.DepartmentId;
+            var csId = csDept.DepartmentId;
             
             context.Sections.AddRange(
-                new Section { SectionName = "CS-A", SemesterId = semesterId, DepartmentId = deptId, Capacity = 50, IsActive = true },
-                new Section { SectionName = "CS-B", SemesterId = semesterId, DepartmentId = deptId, Capacity = 50, IsActive = true },
-                new Section { SectionName = "SE-A", SemesterId = semesterId, DepartmentId = deptId, Capacity = 50, IsActive = true }
+                new Section { SectionName = "CS-A", SemesterId = semesterId, DepartmentId = csId, Capacity = 50, IsActive = true },
+                new Section { SectionName = "CS-B", SemesterId = semesterId, DepartmentId = csId, Capacity = 50, IsActive = true }
             );
             context.SaveChanges();
         }
-
+        
         var sectionA = context.Sections.FirstOrDefault(s => s.SectionName == "CS-A");
 
         // ========================================
-        // 4. SEED COURSES
+        // 4. SEED COURSES (More Courses)
         // ========================================
-        if (!context.Courses.Any() && csDept != null)
+        if (!context.Courses.Any() && csDept != null && seDept != null)
         {
-             var deptId = csDept.DepartmentId;
+             var csId = csDept.DepartmentId;
+             var seId = seDept.DepartmentId;
+             
              context.Courses.AddRange(
-                new Course { CourseCode = "CS101", CourseName = "Intro to Programming", CreditHours = 3, DepartmentId = deptId, IsActive = true },
-                new Course { CourseCode = "CS201", CourseName = "Data Structures", CreditHours = 3, DepartmentId = deptId, IsActive = true },
-                new Course { CourseCode = "CS301", CourseName = "Database Systems", CreditHours = 3, DepartmentId = deptId, IsActive = true },
-                new Course { CourseCode = "CS401", CourseName = "Software Engineering", CreditHours = 3, DepartmentId = deptId, IsActive = true },
-                new Course { CourseCode = "CS501", CourseName = "Web Development", CreditHours = 3, DepartmentId = deptId, IsActive = true }
+                new Course { CourseCode = "CS101", CourseName = "Intro to Computing", CreditHours = 3, DepartmentId = csId, IsActive = true },
+                new Course { CourseCode = "CS201", CourseName = "Programming Fundamentals", CreditHours = 3, DepartmentId = csId, IsActive = true },
+                new Course { CourseCode = "CS301", CourseName = "Data Structures", CreditHours = 3, DepartmentId = csId, IsActive = true },
+                new Course { CourseCode = "SE101", CourseName = "Software Engineering I", CreditHours = 3, DepartmentId = seId, IsActive = true },
+                new Course { CourseCode = "SE201", CourseName = "Software Architecture", CreditHours = 3, DepartmentId = seId, IsActive = true },
+                new Course { CourseCode = "CS501", CourseName = "Web Development", CreditHours = 3, DepartmentId = csId, IsActive = true }
             );
             context.SaveChanges();
         }
@@ -91,14 +96,14 @@ public static class SeedUsers
         EnsureUser(context, "admin", "admin@ams.com", "System Admin", "Admin", null);
 
         // ========================================
-        // 6. SEED TEACHERS
+        // 6. SEED TEACHERS (Named Usernames)
         // ========================================
         var teachers = new[] {
-            ("teacher1", "Muhammad Ahmed", "teacher1@ams.com", "EMP001"),
-            ("teacher2", "Fatima Bibi", "teacher2@ams.com", "EMP002"),
-            ("teacher3", "Ali Hassan", "teacher3@ams.com", "EMP003"),
-            ("teacher4", "Zainab Khan", "teacher4@ams.com", "EMP004"),
-            ("teacher5", "Usman Gondal", "teacher5@ams.com", "EMP005")
+            ("muhammad.ahmed", "Muhammad Ahmed", "ahmed@ams.com", "EMP-001"),
+            ("fatima.bibi", "Fatima Bibi", "fatima@ams.com", "EMP-002"),
+            ("ali.hassan", "Ali Hassan", "ali@ams.com", "EMP-003"),
+            ("zainab.khan", "Zainab Khan", "zainab@ams.com", "EMP-004"),
+            ("usman.gondal", "Usman Gondal", "usman@ams.com", "EMP-005")
         };
 
         foreach (var (username, fullName, email, empId) in teachers)
@@ -113,21 +118,21 @@ public static class SeedUsers
                     EmployeeId = empId,
                     DepartmentId = csDept.DepartmentId,
                     Designation = "Lecturer",
-                    Qualification = "MS CS"
+                    Qualification = "PhD / MS"
                 });
                 context.SaveChanges();
             }
         }
 
         // ========================================
-        // 7. SEED STUDENTS
+        // 7. SEED STUDENTS (Named Usernames)
         // ========================================
         var students = new[] {
-            ("student1", "Bilal Raza", "student1@ams.com", "CS-001"),
-            ("student2", "Sara Malik", "student2@ams.com", "CS-002"),
-            ("student3", "Hamza Shah", "student3@ams.com", "CS-003"),
-            ("student4", "Ayesha Siddiqui", "student4@ams.com", "CS-004"),
-            ("student5", "Omar Farooq", "student5@ams.com", "CS-005")
+            ("bilal.raza", "Bilal Raza", "bilal@ams.com", "F24-001"),
+            ("sara.malik", "Sara Malik", "sara@ams.com", "F24-002"),
+            ("hamza.shah", "Hamza Shah", "hamza@ams.com", "F24-003"),
+            ("ayesha.sids", "Ayesha Siddiqui", "ayesha@ams.com", "F24-004"),
+            ("omar.farooq", "Omar Farooq", "omar@ams.com", "F24-005")
         };
 
         foreach (var (username, fullName, email, rollNo) in students)
@@ -142,29 +147,43 @@ public static class SeedUsers
                     RollNumber = rollNo,
                     DepartmentId = csDept.DepartmentId,
                     SectionId = sectionA.SectionId,
-                    EnrollmentDate = DateTime.UtcNow
+                    EnrollmentDate = DateTime.UtcNow.AddMonths(-4)
                 });
                 context.SaveChanges();
             }
         }
 
         // ========================================
-        // 8. ASSIGN COURSES TO TEACHERS
+        // 8. ASSIGN COURSES TO TEACHERS (Unique Assignments)
         // ========================================
         if (activeSemester != null && sectionA != null)
         {
-            var teacher1 = GetTeacher(context, "teacher1");
-            var teacher2 = GetTeacher(context, "teacher2");
-            var cs101 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS101");
-            var cs201 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS201");
-            var cs301 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS301");
+            // Get Teachers
+            var t1 = GetTeacher(context, "muhammad.ahmed");
+            var t2 = GetTeacher(context, "fatima.bibi");
+            var t3 = GetTeacher(context, "ali.hassan");
+            var t4 = GetTeacher(context, "zainab.khan");
+            var t5 = GetTeacher(context, "usman.gondal");
 
-            // Teacher 1 teaches CS101 and CS201
-            if (teacher1 != null && cs101 != null) EnsureAssignment(context, teacher1.TeacherId, cs101.CourseId, sectionA.SectionId, activeSemester.SemesterId);
-            if (teacher1 != null && cs201 != null) EnsureAssignment(context, teacher1.TeacherId, cs201.CourseId, sectionA.SectionId, activeSemester.SemesterId);
+            // Get Courses
+            var c1 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS101");
+            var c2 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS201");
+            var c3 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS301");
+            var c4 = context.Courses.FirstOrDefault(c => c.CourseCode == "SE101");
+            var c5 = context.Courses.FirstOrDefault(c => c.CourseCode == "SE201");
+            var c6 = context.Courses.FirstOrDefault(c => c.CourseCode == "CS501");
+
+            // Assign
+            if (t1 != null && c1 != null) EnsureAssignment(context, t1.TeacherId, c1.CourseId, sectionA.SectionId, activeSemester.SemesterId); // Ahmed: CS101
+            if (t1 != null && c2 != null) EnsureAssignment(context, t1.TeacherId, c2.CourseId, sectionA.SectionId, activeSemester.SemesterId); // Ahmed: CS201
             
-            // Teacher 2 teaches CS301
-            if (teacher2 != null && cs301 != null) EnsureAssignment(context, teacher2.TeacherId, cs301.CourseId, sectionA.SectionId, activeSemester.SemesterId);
+            if (t2 != null && c3 != null) EnsureAssignment(context, t2.TeacherId, c3.CourseId, sectionA.SectionId, activeSemester.SemesterId); // Fatima: CS301
+            
+            if (t3 != null && c4 != null) EnsureAssignment(context, t3.TeacherId, c4.CourseId, sectionA.SectionId, activeSemester.SemesterId); // Ali: SE101
+            
+            if (t4 != null && c5 != null) EnsureAssignment(context, t4.TeacherId, c5.CourseId, sectionA.SectionId, activeSemester.SemesterId); // Zainab: SE201
+            
+            if (t5 != null && c6 != null) EnsureAssignment(context, t5.TeacherId, c6.CourseId, sectionA.SectionId, activeSemester.SemesterId); // Usman: Web Dev
         }
 
         // ========================================
@@ -183,7 +202,7 @@ public static class SeedUsers
                     {
                         StudentId = student.StudentId,
                         AssignmentId = assignment.AssignmentId,
-                        RegistrationDate = DateTime.UtcNow,
+                        RegistrationDate = DateTime.UtcNow.AddMonths(-4),
                         Status = "Registered"
                     });
                 }
@@ -192,42 +211,66 @@ public static class SeedUsers
         context.SaveChanges();
 
         // ========================================
-        // 10. CREATE TIMETABLE (For Teacher Dashboard Stats)
+        // 10. CREATE TIMETABLES (For All Assignments)
         // ========================================
-        var assignment1 = context.CourseAssignments.FirstOrDefault();
-        if (assignment1 != null && !context.Timetables.Any())
+        if (!context.Timetables.Any())
         {
-            context.Timetables.AddRange(
-                new Timetable { AssignmentId = assignment1.AssignmentId, DayOfWeek = (int)DayOfWeek.Monday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-1", IsActive = true },
-                new Timetable { AssignmentId = assignment1.AssignmentId, DayOfWeek = (int)DayOfWeek.Wednesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-1", IsActive = true }
-            );
+            var days = new[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday };
+            int dayIndex = 0;
+            
+            foreach (var assignment in assignments)
+            {
+                // Assign 2 classes per week per assignment
+                var day1 = days[dayIndex % 5];
+                var day2 = days[(dayIndex + 2) % 5];
+                
+                context.Timetables.Add(new Timetable { AssignmentId = assignment.AssignmentId, DayOfWeek = (int)day1, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-" + (dayIndex + 1), IsActive = true });
+                context.Timetables.Add(new Timetable { AssignmentId = assignment.AssignmentId, DayOfWeek = (int)day2, StartTime = new TimeSpan(11, 0, 0), EndTime = new TimeSpan(12, 30, 0), RoomNumber = "Lab-" + (dayIndex + 1), IsActive = true });
+                
+                dayIndex++;
+            }
             context.SaveChanges();
         }
 
         // ========================================
-        // 11. MARK SOME ATTENDANCE (For Stats)
+        // 11. MARK RANDOM ATTENDANCE (For Stats)
         // ========================================
-        var registrations = context.StudentCourseRegistrations.Include(r => r.Assignment).Include(r => r.Student).ThenInclude(s => s.User).Take(5).ToList();
-        var teacherUser = context.Users.FirstOrDefault(u => u.Username == "teacher1");
-
-        if (registrations.Any() && teacherUser != null && !context.Attendances.Any())
+        var allRegistrations = context.StudentCourseRegistrations.Include(r => r.Assignment).ThenInclude(a => a.Teacher).ToList();
+        
+        if (allRegistrations.Any() && !context.Attendances.Any())
         {
-            var date = DateTime.Today.AddDays(-1);
-            foreach (var reg in registrations)
+            // Generate for last 5 days (excluding weekend)
+            for (int i = 0; i < 5; i++)
             {
-                context.Attendances.Add(new Attendance
+                var date = DateTime.Today.AddDays(-i);
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) continue;
+
+                foreach (var reg in allRegistrations)
                 {
-                    RegistrationId = reg.RegistrationId,
-                    AttendanceDate = date,
-                    Status = "Present",
-                    MarkedBy = teacherUser.UserId,
-                    MarkedDate = DateTime.UtcNow
-                });
+                    // 80% chance Present, 10% Absent, 10% Leave
+                    var roll = _rng.Next(100);
+                    string status = "Present";
+                    if (roll > 80) status = "Absent";
+                    if (roll > 90) status = "Leave";
+
+                    // Ensure marked by the teacher of that course
+                    var markerId = reg.Assignment.Teacher!.UserId;
+
+                    context.Attendances.Add(new Attendance
+                    {
+                        RegistrationId = reg.RegistrationId,
+                        AttendanceDate = date,
+                        Status = status,
+                        MarkedBy = markerId,
+                        MarkedDate = DateTime.UtcNow,
+                        Remarks = status == "Absent" ? "Auto-marked" : null
+                    });
+                }
             }
             context.SaveChanges();
         }
         
-        Console.WriteLine("DB Seeded Successfully!");
+        Console.WriteLine("DB Seeded Successfully with Rich Data!");
     }
 
     private static User EnsureUser(AttendanceManagementDbContext context, string username, string email, string fullName, string role, string? profileImage)

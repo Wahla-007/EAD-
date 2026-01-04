@@ -7,40 +7,38 @@ This system is pre-loaded with the following accounts for demonstration purposes
 
 ---
 
-## 👨‍💼 Administrator
-| Username | Name | Role |
-|----------|------|------|
-| `admin`  | System Admin | Super User |
+## �️ Administrator
+| Role | Username | Password |
+|------|----------|----------|
+| **System Admin** | `admin` | `Test@123` |
 
 ---
 
-## 👩‍🏫 Teachers
-| Username | Name | Department |
-|----------|------|------------|
-| `teacher1` | **Muhammad Ahmed** | Computer Science |
-| `teacher2` | **Fatima Bibi** | Computer Science |
-| `teacher3` | **Ali Hassan** | Computer Science |
-| `teacher4` | **Zainab Khan** | Computer Science |
-| `teacher5` | **Usman Gondal** | Computer Science |
+## �‍🏫 Teachers
+| Username | Name | Department | Courses |
+|----------|------|------------|---------|
+| `muhammad.ahmed` | **Muhammad Ahmed** | Computer Science | CS101, CS201 |
+| `fatima.bibi` | **Fatima Bibi** | Computer Science | CS301 |
+| `ali.hassan` | **Ali Hassan** | Computer Science | SE101 |
+| `zainab.khan` | **Zainab Khan** | Computer Science | SE201 |
+| `usman.gondal` | **Usman Gondal** | Computer Science | CS501 |
 
 ---
 
 ## 👨‍🎓 Students
 | Username | Name | Roll Number |
 |----------|------|-------------|
-| `student1` | **Bilal Raza** | CS-001 |
-| `student2` | **Sara Malik** | CS-002 |
-| `student3` | **Hamza Shah** | CS-003 |
-| `student4` | **Ayesha Siddiqui**| CS-004 |
-| `student5` | **Omar Farooq** | CS-005 |
+| `bilal.raza` | **Bilal Raza** | F24-001 |
+| `sara.malik` | **Sara Malik** | F24-002 |
+| `hamza.shah` | **Hamza Shah** | F24-003 |
+| `ayesha.sids` | **Ayesha Siddiqui** | F24-004 |
+| `omar.farooq` | **Omar Farooq** | F24-005 |
 
 ---
 
-## 📅 Courses & Data
-The system includes:
-- **Active Session:** 2024-2025
-- **Semester:** Fall 2024
-- **Courses:** Intro to Programming, Data Structures, DB Systems, SE, Web Dev.
-- **Assignments:**
-    - Mr. Ahmed teaches Intro to Programming & Data Structures.
-    - Ms. Fatima teaches Database Systems.
+## � Seed Data Summary
+- **Departments**: Computer Science (CS), Software Engineering (SE), IT
+- **Courses**: 6 Active Courses (CS101, CS201, CS301, SE101, SE201, CS501)
+- **Assignments**: All teachers assigned to at least one course.
+- **Students**: All 5 students registered to ALL courses.
+- **Attendance**: Random attendance marked for the past 5 days.
