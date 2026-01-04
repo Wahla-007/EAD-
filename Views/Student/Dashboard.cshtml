@@ -10,333 +10,103 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Attendance Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f5f7fa;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 30px 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
-            padding: 0 30px 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h2 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-header p {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .sidebar-menu {
-            padding: 20px 0;
-        }
-
-        .menu-item {
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .menu-item i {
-            margin-right: 15px;
-            font-size: 18px;
-            width: 20px;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 30px;
-        }
-
-        .top-bar {
-            background: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .welcome-text h1 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .welcome-text p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #333;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .stat-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .stat-icon.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
-        .stat-icon.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
-        .stat-icon.purple { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
-
-        .stat-info h3 {
-            font-size: 32px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .stat-info p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-header h3 {
-            font-size: 18px;
-            color: #333;
-        }
-
-        .card-header a {
-            color: #f093fb;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .card-header a:hover {
-            text-decoration: underline;
-        }
+        /* Student Theme - Cyan Accent */
+        .neo-sidebar { background: #06b6d4; }
+        .neo-sidebar-header { background: #000; color: #06b6d4; }
+        .neo-sidebar-header p { color: white; }
+        .neo-menu-item { color: #000; border-color: rgba(0,0,0,0.1); }
+        .neo-menu-item:hover, .neo-menu-item.active { background: #000; color: #06b6d4; }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
+    <div class="neo-container">
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
                 <h2>AMS Student</h2>
-                <p>@Model.FullName</p>
+                <p>// @Model.FullName</p>
             </div>
-            <nav class="sidebar-menu">
-                <a href="@Url.Action("Dashboard", "Student")" class="menu-item">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="@Url.Action("MyCourses", "Student")" class="menu-item">
-                    <i class="fas fa-book"></i>
-                    <span>My Courses</span>
-                </a>
-                <a href="@Url.Action("RegisterCourses", "Student")" class="menu-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Register Courses</span>
-                </a>
-                <a href="@Url.Action("Attendance", "Student")" class="menu-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>My Attendance</span>
-                </a>
-                <a href="@Url.Action("Schedule", "Student")" class="menu-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Schedule</span>
-                </a>
-                <a href="@Url.Action("Profile", "Student")" class="menu-item">
-                    <i class="fas fa-user"></i>
-                    <span>My Profile</span>
-                </a>
-                <a href="@Url.Action("ChangePassword", "Account")" class="menu-item">
-                    <i class="fas fa-key"></i>
-                    <span>Change Password</span>
-                </a>
-                <a href="@Url.Action("Logout", "Account")" class="menu-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
+            <nav class="neo-sidebar-menu">
+                <a href="@Url.Action("Dashboard", "Student")" class="neo-menu-item active"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="@Url.Action("MyCourses", "Student")" class="neo-menu-item"><i class="fas fa-book"></i><span>My Courses</span></a>
+                <a href="@Url.Action("RegisterCourses", "Student")" class="neo-menu-item"><i class="fas fa-graduation-cap"></i><span>Register</span></a>
+                <a href="@Url.Action("Attendance", "Student")" class="neo-menu-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+                <a href="@Url.Action("Schedule", "Student")" class="neo-menu-item"><i class="fas fa-clock"></i><span>Schedule</span></a>
+                <a href="@Url.Action("Profile", "Student")" class="neo-menu-item"><i class="fas fa-user"></i><span>Profile</span></a>
+                <a href="@Url.Action("ChangePassword", "Account")" class="neo-menu-item"><i class="fas fa-key"></i><span>Password</span></a>
+                <a href="@Url.Action("Logout", "Account")" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
             </nav>
         </aside>
 
-        <main class="main-content">
-            <div class="top-bar">
-                <div class="welcome-text">
-                    <h1>Welcome back, @Model.FullName!</h1>
-                    <p>Here's your academic overview</p>
+        <main class="neo-main">
+            <div class="neo-topbar">
+                <div>
+                    <h1>Welcome, @Model.FullName!</h1>
+                    <p>// Your academic overview</p>
                 </div>
-                <div class="user-actions">
-                    <a href="@Url.Action("ChangePassword", "Account")" class="btn btn-secondary">
-                        <i class="fas fa-key"></i> Change Password
-                    </a>
-                    <a href="@Url.Action("Logout", "Account")" class="btn btn-primary">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+                <div class="neo-topbar-actions">
+                    <a href="@Url.Action("ChangePassword", "Account")" class="neo-btn"><i class="fas fa-key"></i> Password</a>
+                    <a href="@Url.Action("Logout", "Account")" class="neo-btn neo-btn-info"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon blue">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>6</h3>
-                        <p>Enrolled Courses</p>
-                    </div>
+            <div class="neo-stats-grid">
+                <div class="neo-stat-card cyan">
+                    <div class="neo-stat-icon cyan"><i class="fas fa-book"></i></div>
+                    <div class="neo-stat-value">3</div>
+                    <div class="neo-stat-label">Enrolled Courses</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon green">
-                        <i class="fas fa-percentage"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>92%</h3>
-                        <p>Overall Attendance</p>
-                    </div>
+                <div class="neo-stat-card green">
+                    <div class="neo-stat-icon green"><i class="fas fa-percentage"></i></div>
+                    <div class="neo-stat-value">82%</div>
+                    <div class="neo-stat-label">Attendance Rate</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon orange">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>18</h3>
-                        <p>Classes This Week</p>
-                    </div>
+                <div class="neo-stat-card orange">
+                    <div class="neo-stat-icon orange"><i class="fas fa-calendar-check"></i></div>
+                    <div class="neo-stat-value">4</div>
+                    <div class="neo-stat-label">Classes/Week</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon purple">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>2</h3>
-                        <p>Low Attendance Alert</p>
-                    </div>
+                <div class="neo-stat-card yellow">
+                    <div class="neo-stat-icon yellow"><i class="fas fa-star"></i></div>
+                    <div class="neo-stat-value">A</div>
+                    <div class="neo-stat-label">Status</div>
                 </div>
             </div>
 
-            <div class="content-grid">
-                <div class="card">
-                    <div class="card-header">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px;">
+                <div class="neo-card">
+                    <div class="neo-card-header">
                         <h3>Today's Schedule</h3>
-                        <a href="@Url.Action("Schedule", "Student")">View All</a>
+                        <a href="@Url.Action("Schedule", "Student")" style="font-family: var(--font-mono); color: #06b6d4; text-decoration: none; font-size: 13px; font-weight: 600; padding: 5px 10px; border: 2px solid #06b6d4;">View All →</a>
                     </div>
-                    <p style="color: #666;">No classes scheduled for today</p>
+                    <div class="neo-empty">
+                        <i class="fas fa-calendar-day"></i>
+                        <p>No classes scheduled for today</p>
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Quick Links</h3>
+                <div class="neo-card">
+                    <div class="neo-card-header">
+                        <h3>Quick Actions</h3>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <a href="@Url.Action("MyCourses", "Student")" class="btn btn-secondary" style="width: 100%; justify-content: center;">
-                            <i class="fas fa-book"></i> View My Courses
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <a href="@Url.Action("MyCourses", "Student")" class="neo-btn" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-book" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #06b6d4; border: 2px solid #000;"></i>
+                            <span>View My Courses</span>
                         </a>
-                        <a href="@Url.Action("Attendance", "Student")" class="btn btn-secondary" style="width: 100%; justify-content: center;">
-                            <i class="fas fa-calendar-check"></i> Check Attendance
+                        <a href="@Url.Action("Attendance", "Student")" class="neo-btn" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-calendar-check" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #22c55e; border: 2px solid #000;"></i>
+                            <span>Check Attendance</span>
                         </a>
-                        <a href="@Url.Action("Profile", "Student")" class="btn btn-secondary" style="width: 100%; justify-content: center;">
-                            <i class="fas fa-user"></i> View Profile
+                        <a href="@Url.Action("RegisterCourses", "Student")" class="neo-btn" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-plus-circle" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #f97316; color: white; border: 2px solid #000;"></i>
+                            <span>Register for Courses</span>
+                        </a>
+                        <a href="@Url.Action("Profile", "Student")" class="neo-btn" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-user" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #9333ea; color: white; border: 2px solid #000;"></i>
+                            <span>View Profile</span>
                         </a>
                     </div>
                 </div>

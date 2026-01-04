@@ -4,181 +4,130 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Courses</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Courses - Attendance Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { color: #00b894; font-size: 28px; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            color: white;
-        }
-        .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #5a6268; }
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-        }
+        .neo-sidebar { background: #22c55e; }
+        .neo-sidebar-header { background: #000; color: #22c55e; }
+        .neo-sidebar-header p { color: white; }
+        .neo-menu-item { color: #000; border-color: rgba(0,0,0,0.1); }
+        .neo-menu-item:hover, .neo-menu-item.active { background: #000; color: #22c55e; }
+        
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
         .course-card {
-            background: white;
+            background: var(--bg-cream);
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0px #000;
+            transition: all 0.15s ease;
         }
         .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px #000;
         }
-        .course-header {
+        .course-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .course-icon {
+            width: 60px;
+            height: 60px;
+            background: #22c55e;
+            border: 3px solid #000;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-        }
-        .course-icon {
-            font-size: 40px;
-            color: #00b894;
+            justify-content: center;
+            font-size: 28px;
             margin-right: 15px;
         }
-        .course-code {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-        }
-        .course-name {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .course-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+        .course-code { font-size: 22px; font-weight: 700; }
+        .course-name { font-family: var(--font-mono); font-size: 14px; color: #555; margin-bottom: 20px; }
+        .course-info { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         .info-row {
             display: flex;
             align-items: center;
-            color: #666;
-            font-size: 14px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: #444;
         }
-        .info-row i {
-            width: 20px;
-            color: #00b894;
-            margin-right: 10px;
-        }
+        .info-row i { width: 25px; color: #22c55e; }
         .course-actions {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
+            border-top: 2px dashed #ccc;
         }
-        .btn-sm {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            color: white;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
-        }
-        .empty-state {
-            background: white;
-            padding: 60px;
-            border-radius: 15px;
-            text-align: center;
-            color: #999;
-        }
-        .empty-state i { font-size: 64px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-book-open"></i> My Courses</h1>
-            <a href="/Teacher/Dashboard" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
-        </div>
+    <div class="neo-container">
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
+                <h2>AMS Teacher</h2>
+                <p>// My Courses</p>
+            </div>
+            <nav class="neo-sidebar-menu">
+                <a href="/Teacher/Dashboard" class="neo-menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="/Teacher/MyCourses" class="neo-menu-item active"><i class="fas fa-book"></i><span>My Courses</span></a>
+                <a href="/Teacher/Attendance" class="neo-menu-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+                <a href="/Teacher/Students" class="neo-menu-item"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+                <a href="/Teacher/Schedule" class="neo-menu-item"><i class="fas fa-clock"></i><span>Schedule</span></a>
+                <a href="/Teacher/Reports" class="neo-menu-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+                <a href="/Account/Logout" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </nav>
+        </aside>
 
-        @if (Model == null || !Model.Any())
-        {
-            <div class="empty-state">
-                <i class="fas fa-book-open"></i>
-                <p>No courses assigned to you yet</p>
+        <main class="neo-main">
+            <div class="neo-topbar">
+                <div>
+                    <h1><i class="fas fa-book-open"></i> My Courses</h1>
+                    <p>// Courses assigned to you this semester</p>
+                </div>
+                <div class="neo-topbar-actions">
+                    <a href="/Teacher/Dashboard" class="neo-btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
             </div>
-        }
-        else
-        {
-            <div class="courses-grid">
-                @foreach (var assignment in Model)
-                {
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-icon">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <div>
-                                <div class="course-code">@assignment.Course?.CourseCode</div>
-                            </div>
-                        </div>
-                        <div class="course-name">@assignment.Course?.CourseName</div>
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fas fa-users"></i>
-                                <span>Section: @assignment.Section?.SectionName</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-calendar"></i>
-                                <span>Semester: @assignment.Semester?.SemesterName</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-clock"></i>
-                                <span>Credit Hours: @assignment.Course?.CreditHours</span>
-                            </div>
-                        </div>
-                        <div class="course-actions">
-                            <a href="/Teacher/MarkAttendance?assignmentId=@assignment.AssignmentId" class="btn-sm btn-primary">
-                                <i class="fas fa-check-circle"></i> Mark Attendance
-                            </a>
-                        </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="neo-card">
+                    <div class="neo-empty">
+                        <i class="fas fa-book-open"></i>
+                        <p>No courses assigned to you yet</p>
                     </div>
-                }
-            </div>
-        }
+                </div>
+            }
+            else
+            {
+                <div class="courses-grid">
+                    @foreach (var assignment in Model)
+                    {
+                        <div class="course-card">
+                            <div class="course-header">
+                                <div class="course-icon"><i class="fas fa-book"></i></div>
+                                <div>
+                                    <div class="course-code">@assignment.Course?.CourseCode</div>
+                                </div>
+                            </div>
+                            <div class="course-name">@assignment.Course?.CourseName</div>
+                            <div class="course-info">
+                                <div class="info-row"><i class="fas fa-users"></i><span>Section: @assignment.Section?.SectionName</span></div>
+                                <div class="info-row"><i class="fas fa-calendar"></i><span>Semester: @assignment.Semester?.SemesterName</span></div>
+                                <div class="info-row"><i class="fas fa-clock"></i><span>Credit Hours: @assignment.Course?.CreditHours</span></div>
+                            </div>
+                            <div class="course-actions">
+                                <a href="/Teacher/MarkAttendance?assignmentId=@assignment.AssignmentId" class="neo-btn neo-btn-success" style="flex: 1; justify-content: center;">
+                                    <i class="fas fa-check-circle"></i> Mark Attendance
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </main>
     </div>
 </body>
 </html>

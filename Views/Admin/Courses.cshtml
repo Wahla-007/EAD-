@@ -4,207 +4,140 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Manage Courses</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { color: #667eea; font-size: 28px; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn-secondary:hover { background: #5a6268; }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        tr:hover { background: #f8f9fa; }
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .badge-success { background: #28a745; color: white; }
-        .badge-danger { background: #dc3545; color: white; }
-        .badge-info { background: #17a2b8; color: white; }
-        select, input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-        .form-group { margin-bottom: 20px; }
-        label { font-weight: 600; color: #333; display: block; }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        .empty-state i { font-size: 64px; margin-bottom: 20px; }
-        .header-actions { display: flex; gap: 10px; }
-        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Courses - Attendance Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-book"></i> Manage Courses</h1>
-            <div class="header-actions">
-                <a href="#" onclick="showAddCourse()" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add New Course
-                </a>
-                <a href="/Admin/Dashboard" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back
-                </a>
+    <div class="neo-container">
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
+                <h2>AMS Admin</h2>
+                <p>// Course Management</p>
             </div>
-        </div>
+            <nav class="neo-sidebar-menu">
+                <a href="/Admin/Dashboard" class="neo-menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="/Admin/Students" class="neo-menu-item"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+                <a href="/Admin/Teachers" class="neo-menu-item"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></a>
+                <a href="/Admin/Courses" class="neo-menu-item active"><i class="fas fa-book"></i><span>Courses</span></a>
+                <a href="/Admin/Sessions" class="neo-menu-item"><i class="fas fa-calendar-alt"></i><span>Sessions</span></a>
+                <a href="/Admin/Departments" class="neo-menu-item"><i class="fas fa-building"></i><span>Departments</span></a>
+                <a href="/Admin/Reports" class="neo-menu-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+                <a href="/Account/Logout" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </nav>
+        </aside>
 
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> @TempData["Success"]
-            </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-error">
-                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
-            </div>
-        }
-
-        <div class="card">
-            <h2 style="margin-bottom: 20px; color: #333;">All Courses</h2>
-            
-            @if (Model == null || !Model.Any())
-            {
-                <div class="empty-state">
-                    <i class="fas fa-book"></i>
-                    <p>No courses found in the system</p>
+        <main class="neo-main">
+            <div class="neo-topbar">
+                <div>
+                    <h1><i class="fas fa-book"></i> Manage Courses</h1>
+                    <p>// Add and manage academic courses</p>
                 </div>
-            }
-            else
+                <div class="neo-topbar-actions">
+                    <button onclick="showAddCourse()" class="neo-btn neo-btn-primary">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                    <a href="/Admin/Dashboard" class="neo-btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+
+            @if (TempData["Success"] != null)
             {
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Course Code</th>
-                            <th>Course Name</th>
-                            <th>Credit Hours</th>
-                            <th>Department</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var course in Model)
-                        {
-                            <tr>
-                                <td><strong>@course.CourseCode</strong></td>
-                                <td>@course.CourseName</td>
-                                <td>@course.CreditHours</td>
-                                <td>@course.Department?.DepartmentName</td>
-                                <td>
-                                    @if (course.IsActive)
-                                    {
-                                        <span class="badge badge-success">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-danger">Inactive</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <div class="neo-alert neo-alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
             }
-        </div>
+            @if (TempData["Error"] != null)
+            {
+                <div class="neo-alert neo-alert-danger"><i class="fas fa-exclamation-circle"></i> @TempData["Error"]</div>
+            }
+
+            <div class="neo-card">
+                <div class="neo-card-header">
+                    <h3>All Courses</h3>
+                    <span style="font-family: var(--font-mono); font-size: 13px;">Total: @(Model?.Count ?? 0)</span>
+                </div>
+
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="neo-empty">
+                        <i class="fas fa-book"></i>
+                        <p>No courses found in the system</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="neo-table-wrapper">
+                        <table class="neo-table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Credit Hours</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var course in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@course.CourseCode</strong></td>
+                                        <td>@course.CourseName</td>
+                                        <td><span class="neo-badge neo-badge-info">@course.CreditHours CH</span></td>
+                                        <td>@course.Department?.DepartmentName</td>
+                                        <td>
+                                            @if (course.IsActive)
+                                            {
+                                                <span class="neo-badge neo-badge-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="neo-badge neo-badge-danger">Inactive</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </main>
     </div>
 
     <!-- Add Course Modal -->
-    <div id="addCourseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
-            <h3 style="margin-bottom: 25px; color: #667eea;">
-                <i class="fas fa-plus"></i> Add New Course
-            </h3>
+    <div id="addCourseModal" class="neo-modal-overlay" style="display: none;">
+        <div class="neo-modal">
+            <div class="neo-modal-header">
+                <h3><i class="fas fa-plus"></i> Add New Course</h3>
+                <button onclick="closeAddCourse()" class="neo-modal-close">×</button>
+            </div>
             <form action="/Admin/CreateCourse" method="post">
-                <div class="form-group">
-                    <label>Course Code</label>
-                    <input type="text" name="courseCode" required placeholder="e.g., CS101" />
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-code"></i> Course Code</label>
+                    <input type="text" name="courseCode" class="neo-input" required placeholder="e.g., CS101" />
                 </div>
-
-                <div class="form-group">
-                    <label>Course Name</label>
-                    <input type="text" name="courseName" required placeholder="Enter course name" />
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-book"></i> Course Name</label>
+                    <input type="text" name="courseName" class="neo-input" required placeholder="Enter course name" />
                 </div>
-
-                <div class="form-group">
-                    <label>Credit Hours</label>
-                    <input type="number" name="creditHours" required min="1" max="6" placeholder="Enter credit hours (1-6)" />
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-clock"></i> Credit Hours</label>
+                    <input type="number" name="creditHours" class="neo-input" required min="1" max="6" placeholder="1-6" />
                 </div>
-
-                <div class="form-group">
-                    <label>Department</label>
-                    <select name="departmentId" required id="departmentSelect">
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-building"></i> Department</label>
+                    <select name="departmentId" class="neo-select" required id="departmentSelect">
                         <option value="">-- Choose Department --</option>
                     </select>
                 </div>
-
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-                    <button type="button" onclick="closeAddCourse()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Course</button>
+                    <button type="button" onclick="closeAddCourse()" class="neo-btn">Cancel</button>
+                    <button type="submit" class="neo-btn neo-btn-primary">Create Course</button>
                 </div>
             </form>
         </div>
@@ -215,11 +148,9 @@
             document.getElementById('addCourseModal').style.display = 'flex';
             loadDepartments();
         }
-
         function closeAddCourse() {
             document.getElementById('addCourseModal').style.display = 'none';
         }
-
         async function loadDepartments() {
             try {
                 const response = await fetch('/Admin/GetDepartments');
@@ -229,16 +160,8 @@
                 departments.forEach(dept => {
                     select.innerHTML += `<option value="${dept.departmentId}">${dept.departmentName}</option>`;
                 });
-            } catch (error) {
-                console.error('Error loading departments:', error);
-            }
+            } catch (error) { console.error('Error loading departments:', error); }
         }
-
-        // Auto-hide alerts after 5 seconds
-        setTimeout(() => {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => alert.style.display = 'none');
-        }, 5000);
     </script>
 </body>
 </html>

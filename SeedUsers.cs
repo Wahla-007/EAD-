@@ -89,8 +89,25 @@ public static class SeedUsers
             studentUser.PasswordSalt = salt;
         }
 
+        // Update all Pakistani teachers and students to have working passwords
+        var allTeachers = context.Users.Where(u => u.Role == "Teacher").ToList();
+        foreach (var teacher in allTeachers)
+        {
+            var (hash, salt) = HashPassword("Test@123");
+            teacher.PasswordHash = hash;
+            teacher.PasswordSalt = salt;
+        }
+
+        var allStudents = context.Users.Where(u => u.Role == "Student").ToList();
+        foreach (var student in allStudents)
+        {
+            var (hash, salt) = HashPassword("Test@123");
+            student.PasswordHash = hash;
+            student.PasswordSalt = salt;
+        }
+
         context.SaveChanges();
-        Console.WriteLine("Test users seeded/updated successfully!");
+        Console.WriteLine("Test users seeded/updated successfully! All teachers and students can login with password: Test@123");
     }
 
     private static (string hash, string salt) HashPassword(string password)

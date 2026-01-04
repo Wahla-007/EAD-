@@ -1,0 +1,585 @@
+/* ============================================
+   NEO-BRUTALIST DESIGN SYSTEM
+   Attendance Management System
+   HCI Principles: Affordance, Feedback, Clarity
+   ============================================ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ============================================ */
+:root {
+    /* Color Palette - High Contrast */
+    --bg-paper: #f5f5f0;
+    --bg-cream: #fffef9;
+    --accent-purple: #9333ea;
+    --accent-green: #22c55e;
+    --accent-orange: #f97316;
+    --accent-yellow: #fde047;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --accent-red: #ef4444;
+    --text-black: #000000;
+    --border-black: #000000;
+    --shadow-black: #000000;
+    
+    /* Typography */
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    /* Spacing & Sizing */
+    --border-thick: 3px;
+    --shadow-offset: 5px;
+    --radius-none: 0px;
+}
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-display);
+    background-color: var(--bg-paper);
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    min-height: 100vh;
+}
+
+/* ============================================
+   LAYOUT CONTAINERS
+   ============================================ */
+.neo-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.neo-main {
+    flex: 1;
+    margin-left: 280px;
+    padding: 30px;
+}
+
+/* ============================================
+   SIDEBAR - Admin (Purple)
+   ============================================ */
+.neo-sidebar {
+    width: 280px;
+    background: var(--accent-purple);
+    border-right: var(--border-thick) solid var(--border-black);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.neo-sidebar.green { background: var(--accent-green); }
+.neo-sidebar.cyan { background: var(--accent-cyan); }
+.neo-sidebar.orange { background: var(--accent-orange); }
+
+.neo-sidebar-header {
+    padding: 30px 25px;
+    border-bottom: var(--border-thick) solid var(--border-black);
+    background: var(--accent-yellow);
+    color: var(--text-black);
+}
+
+.neo-sidebar.green .neo-sidebar-header {
+    background: var(--text-black);
+    color: var(--accent-green);
+}
+
+.neo-sidebar.cyan .neo-sidebar-header {
+    background: var(--text-black);
+    color: var(--accent-cyan);
+}
+
+.neo-sidebar-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.neo-sidebar-header p {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.neo-sidebar.green .neo-sidebar-header p { color: white; }
+.neo-sidebar.cyan .neo-sidebar-header p { color: white; }
+
+.neo-sidebar-menu {
+    padding: 15px 0;
+    flex: 1;
+}
+
+.neo-menu-item {
+    padding: 14px 25px;
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.1s ease;
+}
+
+.neo-sidebar.green .neo-menu-item { color: var(--text-black); border-color: rgba(0,0,0,0.1); }
+
+.neo-menu-item:hover {
+    background: var(--text-black);
+    color: var(--accent-yellow);
+    padding-left: 30px;
+}
+
+.neo-sidebar.green .neo-menu-item:hover { color: var(--accent-green); }
+.neo-sidebar.cyan .neo-menu-item:hover { color: var(--accent-cyan); }
+
+.neo-menu-item.active {
+    background: var(--text-black);
+    color: var(--accent-yellow);
+}
+
+.neo-sidebar.green .neo-menu-item.active { color: var(--accent-green); }
+.neo-sidebar.cyan .neo-menu-item.active { color: var(--accent-cyan); }
+
+.neo-menu-item i {
+    margin-right: 15px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+/* ============================================
+   TOP BAR
+   ============================================ */
+.neo-topbar {
+    background: var(--bg-cream);
+    padding: 25px 30px;
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--shadow-black);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.neo-topbar h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-black);
+    margin-bottom: 5px;
+}
+
+.neo-topbar p {
+    font-family: var(--font-mono);
+    color: #555;
+    font-size: 14px;
+}
+
+.neo-topbar-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   BUTTONS - Tactile Feedback (HCI)
+   ============================================ */
+.neo-btn {
+    padding: 12px 20px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: 4px 4px 0px var(--shadow-black);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.1s ease;
+    background: var(--bg-cream);
+    color: var(--text-black);
+}
+
+.neo-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--shadow-black);
+}
+
+.neo-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px var(--shadow-black);
+}
+
+.neo-btn-primary { background: var(--accent-purple); color: white; }
+.neo-btn-success { background: var(--accent-green); color: var(--text-black); }
+.neo-btn-warning { background: var(--accent-orange); color: white; }
+.neo-btn-danger { background: var(--accent-red); color: white; }
+.neo-btn-info { background: var(--accent-cyan); color: var(--text-black); }
+
+.neo-btn-sm {
+    padding: 8px 14px;
+    font-size: 12px;
+    box-shadow: 3px 3px 0px var(--shadow-black);
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.neo-card {
+    background: var(--bg-cream);
+    padding: 25px;
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--shadow-black);
+    margin-bottom: 25px;
+}
+
+.neo-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px dashed #ccc;
+}
+
+.neo-card-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-black);
+}
+
+/* ============================================
+   STAT CARDS
+   ============================================ */
+.neo-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.neo-stat-card {
+    background: var(--bg-cream);
+    padding: 25px;
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--shadow-black);
+    transition: all 0.15s ease;
+}
+
+.neo-stat-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0px var(--shadow-black);
+}
+
+.neo-stat-card.purple { border-left: 8px solid var(--accent-purple); }
+.neo-stat-card.green { border-left: 8px solid var(--accent-green); }
+.neo-stat-card.orange { border-left: 8px solid var(--accent-orange); }
+.neo-stat-card.cyan { border-left: 8px solid var(--accent-cyan); }
+.neo-stat-card.yellow { border-left: 8px solid var(--accent-yellow); }
+.neo-stat-card.pink { border-left: 8px solid var(--accent-pink); }
+
+.neo-stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: var(--border-thick) solid var(--border-black);
+    margin-bottom: 15px;
+}
+
+.neo-stat-icon.purple { background: var(--accent-purple); color: white; }
+.neo-stat-icon.green { background: var(--accent-green); }
+.neo-stat-icon.orange { background: var(--accent-orange); color: white; }
+.neo-stat-icon.cyan { background: var(--accent-cyan); }
+.neo-stat-icon.yellow { background: var(--accent-yellow); }
+
+.neo-stat-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--text-black);
+    line-height: 1;
+}
+
+.neo-stat-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+.neo-form-group {
+    margin-bottom: 20px;
+}
+
+.neo-label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: var(--text-black);
+}
+
+.neo-label i {
+    margin-right: 8px;
+    color: var(--accent-purple);
+}
+
+.neo-input,
+.neo-select,
+.neo-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-family: var(--font-mono);
+    background: var(--bg-cream);
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: 4px 4px 0px var(--shadow-black);
+    transition: all 0.15s ease;
+}
+
+.neo-input:focus,
+.neo-select:focus,
+.neo-textarea:focus {
+    outline: none;
+    background: var(--accent-yellow);
+    box-shadow: 6px 6px 0px var(--shadow-black);
+    transform: translate(-2px, -2px);
+}
+
+.neo-input::placeholder { color: #888; font-style: italic; }
+
+/* ============================================
+   TABLES
+   ============================================ */
+.neo-table-wrapper {
+    overflow-x: auto;
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--shadow-black);
+}
+
+.neo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    background: var(--bg-cream);
+}
+
+.neo-table th {
+    background: var(--text-black);
+    color: var(--accent-yellow);
+    padding: 15px;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+    border-bottom: var(--border-thick) solid var(--border-black);
+}
+
+.neo-table td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.neo-table tr:hover {
+    background: var(--accent-yellow);
+}
+
+.neo-table tr:nth-child(even) {
+    background: var(--bg-paper);
+}
+
+.neo-table tr:nth-child(even):hover {
+    background: var(--accent-yellow);
+}
+
+/* ============================================
+   BADGES / STATUS
+   ============================================ */
+.neo-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid var(--border-black);
+}
+
+.neo-badge-success { background: var(--accent-green); }
+.neo-badge-danger { background: var(--accent-red); color: white; }
+.neo-badge-warning { background: var(--accent-orange); color: white; }
+.neo-badge-info { background: var(--accent-cyan); }
+.neo-badge-primary { background: var(--accent-purple); color: white; }
+
+/* ============================================
+   ALERTS
+   ============================================ */
+.neo-alert {
+    padding: 15px 20px;
+    border: var(--border-thick) solid var(--border-black);
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.neo-alert-success { background: #dcfce7; border-left: 8px solid var(--accent-green); }
+.neo-alert-danger { background: #fee2e2; border-left: 8px solid var(--accent-red); }
+.neo-alert-warning { background: #fef3c7; border-left: 8px solid var(--accent-orange); }
+.neo-alert-info { background: #e0f2fe; border-left: 8px solid var(--accent-cyan); }
+
+/* ============================================
+   MODAL
+   ============================================ */
+.neo-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.neo-modal {
+    background: var(--bg-cream);
+    border: var(--border-thick) solid var(--border-black);
+    box-shadow: 10px 10px 0px var(--shadow-black);
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.neo-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px dashed #ccc;
+}
+
+.neo-modal-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.neo-modal-close {
+    background: var(--accent-red);
+    color: white;
+    border: 2px solid var(--border-black);
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.1s ease;
+}
+
+.neo-modal-close:hover {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.neo-empty {
+    padding: 40px;
+    text-align: center;
+    background: var(--bg-paper);
+    border: 2px dashed #ccc;
+    font-family: var(--font-mono);
+    color: #666;
+}
+
+.neo-empty i {
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: #999;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .neo-sidebar {
+        width: 80px;
+    }
+    .neo-sidebar-header h2,
+    .neo-sidebar-header p,
+    .neo-menu-item span {
+        display: none;
+    }
+    .neo-sidebar-header {
+        padding: 20px 15px;
+        text-align: center;
+    }
+    .neo-menu-item {
+        justify-content: center;
+        padding: 15px;
+    }
+    .neo-menu-item i {
+        margin-right: 0;
+        font-size: 20px;
+    }
+    .neo-main {
+        margin-left: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .neo-topbar {
+        flex-direction: column;
+        text-align: center;
+    }
+    .neo-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .neo-main {
+        padding: 15px;
+    }
+    .neo-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

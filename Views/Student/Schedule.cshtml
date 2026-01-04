@@ -4,219 +4,119 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Schedule</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Schedule - Attendance Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { color: #ff6b9d; font-size: 28px; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            color: white;
-        }
-        .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #5a6268; }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        .timetable {
-            display: grid;
-            grid-template-columns: 120px repeat(7, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .day-header {
-            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .time-slot {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #666;
-        }
-        .class-card {
-            background: linear-gradient(135deg, #fff5f7, #ffe8ee);
-            border: 2px solid #ff6b9d;
-            padding: 15px;
-            border-radius: 10px;
-            transition: transform 0.2s;
-        }
-        .class-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
-        }
-        .class-code {
-            font-weight: 700;
-            color: #ff6b9d;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .class-name {
-            font-size: 13px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .class-teacher {
-            font-size: 12px;
-            color: #666;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .class-time {
-            font-size: 11px;
-            color: #999;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .class-room {
-            font-size: 11px;
-            color: #999;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        .empty-state i { font-size: 64px; margin-bottom: 20px; color: #ff6b9d; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th {
-            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: top;
-        }
-        .day-name {
-            font-weight: 600;
-            color: #ff6b9d;
-        }
+        .neo-sidebar { background: #06b6d4; }
+        .neo-sidebar-header { background: #000; color: #06b6d4; }
+        .neo-sidebar-header p { color: white; }
+        .neo-menu-item { color: #000; border-color: rgba(0,0,0,0.1); }
+        .neo-menu-item:hover, .neo-menu-item.active { background: #000; color: #06b6d4; }
+        .day-name { font-weight: 700; color: #06b6d4; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-calendar-alt"></i> My Class Schedule</h1>
-            <a href="/Student/Dashboard" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
-        </div>
+    <div class="neo-container">
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
+                <h2>AMS Student</h2>
+                <p>// Class Schedule</p>
+            </div>
+            <nav class="neo-sidebar-menu">
+                <a href="/Student/Dashboard" class="neo-menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="/Student/MyCourses" class="neo-menu-item"><i class="fas fa-book"></i><span>My Courses</span></a>
+                <a href="/Student/RegisterCourses" class="neo-menu-item"><i class="fas fa-graduation-cap"></i><span>Register</span></a>
+                <a href="/Student/Attendance" class="neo-menu-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+                <a href="/Student/Schedule" class="neo-menu-item active"><i class="fas fa-clock"></i><span>Schedule</span></a>
+                <a href="/Student/Profile" class="neo-menu-item"><i class="fas fa-user"></i><span>Profile</span></a>
+                <a href="/Account/Logout" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </nav>
+        </aside>
 
-        <div class="card">
-            <h2 style="margin-bottom: 20px; color: #333;">Weekly Timetable</h2>
-            
-            @if (Model == null || !Model.Any())
-            {
-                <div class="empty-state">
-                    <i class="fas fa-calendar-times"></i>
-                    <p>No timetable available</p>
-                    <p style="font-size: 14px; margin-top: 10px;">Timetable will appear once admin assigns class schedules</p>
+        <main class="neo-main">
+            <div class="neo-topbar">
+                <div>
+                    <h1><i class="fas fa-calendar-alt"></i> My Class Schedule</h1>
+                    <p>// Your weekly timetable</p>
                 </div>
-            }
-            else
-            {
-                var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Course</th>
-                            <th>Teacher</th>
-                            <th>Room</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var dayGroup in Model.GroupBy(t => t.DayOfWeek).OrderBy(g => g.Key))
-                        {
-                            var dayName = days[dayGroup.Key - 1];
-                            foreach (var schedule in dayGroup.OrderBy(s => s.StartTime))
-                            {
+                <div class="neo-topbar-actions">
+                    <a href="/Student/Dashboard" class="neo-btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+
+            <div class="neo-card">
+                <div class="neo-card-header">
+                    <h3>Weekly Timetable</h3>
+                </div>
+
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="neo-empty">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No timetable available</p>
+                        <p style="font-size: 14px; margin-top: 10px;">Timetable will appear once admin assigns class schedules</p>
+                    </div>
+                }
+                else
+                {
+                    var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+                    <div class="neo-table-wrapper">
+                        <table class="neo-table">
+                            <thead>
                                 <tr>
-                                    <td class="day-name">@dayName</td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 5px;">
-                                            <i class="fas fa-clock" style="color: #ff6b9d;"></i>
-                                            @schedule.StartTime.ToString(@"hh\:mm") - @schedule.EndTime.ToString(@"hh\:mm")
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600; color: #333;">@schedule.Assignment?.Course?.CourseCode</div>
-                                        <div style="font-size: 13px; color: #666;">@schedule.Assignment?.Course?.CourseName</div>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 5px;">
-                                            <i class="fas fa-chalkboard-teacher" style="color: #ff6b9d;"></i>
-                                            @schedule.Assignment?.Teacher?.User?.FullName
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(schedule.RoomNumber))
-                                        {
-                                            <div style="display: flex; align-items: center; gap: 5px;">
-                                                <i class="fas fa-door-open" style="color: #ff6b9d;"></i>
-                                                @schedule.RoomNumber
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <span style="color: #999;">-</span>
-                                        }
-                                    </td>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Course</th>
+                                    <th>Teacher</th>
+                                    <th>Room</th>
                                 </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+                            </thead>
+                            <tbody>
+                                @foreach (var dayGroup in Model.GroupBy(t => t.DayOfWeek).OrderBy(g => g.Key))
+                                {
+                                    var dayName = days[dayGroup.Key - 1];
+                                    foreach (var schedule in dayGroup.OrderBy(s => s.StartTime))
+                                    {
+                                        <tr>
+                                            <td class="day-name">@dayName</td>
+                                            <td>
+                                                <span style="font-family: var(--font-mono);">
+                                                    @schedule.StartTime.ToString(@"hh\:mm") - @schedule.EndTime.ToString(@"hh\:mm")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div style="font-weight: 700;">@schedule.Assignment?.Course?.CourseCode</div>
+                                                <div style="font-size: 13px; color: #666; font-family: var(--font-mono);">@schedule.Assignment?.Course?.CourseName</div>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-chalkboard-teacher" style="color: #06b6d4; margin-right: 5px;"></i>
+                                                @schedule.Assignment?.Teacher?.User?.FullName
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(schedule.RoomNumber))
+                                                {
+                                                    <span class="neo-badge neo-badge-info">@schedule.RoomNumber</span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: #999;">-</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </main>
     </div>
 </body>
 </html>

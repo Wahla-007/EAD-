@@ -4,142 +4,108 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Students</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Students - Attendance Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            min-height: 100vh;
-            padding: 30px;
-        }
-        .container { max-width: 1400px; margin: 0 auto; }
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { color: #11998e; font-size: 28px; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn-secondary:hover { background: #5a6268; }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        tr:hover { background: #f8f9fa; }
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .badge-success { background: #28a745; color: white; }
-        .badge-warning { background: #ffc107; color: #333; }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        .empty-state i { font-size: 64px; margin-bottom: 20px; }
+        .neo-sidebar { background: #22c55e; }
+        .neo-sidebar-header { background: #000; color: #22c55e; }
+        .neo-sidebar-header p { color: white; }
+        .neo-menu-item { color: #000; border-color: rgba(0,0,0,0.1); }
+        .neo-menu-item:hover, .neo-menu-item.active { background: #000; color: #22c55e; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-user-graduate"></i> My Students</h1>
-            <a href="/Teacher/Dashboard" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
-        </div>
+    <div class="neo-container">
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
+                <h2>AMS Teacher</h2>
+                <p>// My Students</p>
+            </div>
+            <nav class="neo-sidebar-menu">
+                <a href="/Teacher/Dashboard" class="neo-menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="/Teacher/MyCourses" class="neo-menu-item"><i class="fas fa-book"></i><span>My Courses</span></a>
+                <a href="/Teacher/Attendance" class="neo-menu-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+                <a href="/Teacher/Students" class="neo-menu-item active"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+                <a href="/Teacher/Schedule" class="neo-menu-item"><i class="fas fa-clock"></i><span>Schedule</span></a>
+                <a href="/Teacher/Reports" class="neo-menu-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+                <a href="/Account/Logout" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </nav>
+        </aside>
 
-        <div class="card">
-            <h2 style="margin-bottom: 20px; color: #333;">Students in My Courses</h2>
-            
-            @if (Model == null || !Model.Any())
-            {
-                <div class="empty-state">
-                    <i class="fas fa-user-graduate"></i>
-                    <p>No students enrolled in your courses yet</p>
+        <main class="neo-main">
+            <div class="neo-topbar">
+                <div>
+                    <h1><i class="fas fa-user-graduate"></i> My Students</h1>
+                    <p>// Students enrolled in your courses</p>
                 </div>
-            }
-            else
-            {
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Roll Number</th>
-                            <th>Student Name</th>
-                            <th>Email</th>
-                            <th>Course</th>
-                            <th>Section</th>
-                            <th>Registration Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var registration in Model)
-                        {
-                            <tr>
-                                <td><strong>@registration.Student?.RollNumber</strong></td>
-                                <td>@registration.Student?.User?.FullName</td>
-                                <td>@registration.Student?.User?.Email</td>
-                                <td>
-                                    <strong>@registration.Assignment?.Course?.CourseCode</strong><br />
-                                    <small style="color: #666;">@registration.Assignment?.Course?.CourseName</small>
-                                </td>
-                                <td>@registration.Assignment?.Section?.SectionName</td>
-                                <td>@registration.RegistrationDate.ToString("MMM dd, yyyy")</td>
-                                <td>
-                                    @if (registration.Status == "Registered")
-                                    {
-                                        <span class="badge badge-success">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-warning">@registration.Status</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+                <div class="neo-topbar-actions">
+                    <a href="/Teacher/Dashboard" class="neo-btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </div>
+
+            <div class="neo-card">
+                <div class="neo-card-header">
+                    <h3>Students in My Courses</h3>
+                    <span style="font-family: var(--font-mono); font-size: 13px;">Total: @(Model?.Count ?? 0)</span>
+                </div>
+
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="neo-empty">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>No students enrolled in your courses yet</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="neo-table-wrapper">
+                        <table class="neo-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll Number</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Course</th>
+                                    <th>Section</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var registration in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@registration.Student?.RollNumber</strong></td>
+                                        <td>@registration.Student?.User?.FullName</td>
+                                        <td>@registration.Student?.User?.Email</td>
+                                        <td>
+                                            <strong>@registration.Assignment?.Course?.CourseCode</strong><br />
+                                            <small style="font-family: var(--font-mono); color: #666;">@registration.Assignment?.Course?.CourseName</small>
+                                        </td>
+                                        <td>@registration.Assignment?.Section?.SectionName</td>
+                                        <td>
+                                            @if (registration.Status == "Registered")
+                                            {
+                                                <span class="neo-badge neo-badge-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="neo-badge neo-badge-warning">@registration.Status</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </main>
     </div>
 </body>
 </html>

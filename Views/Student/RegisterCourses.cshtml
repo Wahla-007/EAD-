@@ -5,247 +5,188 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register for Courses</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register for Courses - Attendance Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { color: #ff6b9d; font-size: 28px; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #5a6268; }
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-        }
+        .neo-sidebar { background: #06b6d4; }
+        .neo-sidebar-header { background: #000; color: #06b6d4; }
+        .neo-sidebar-header p { color: white; }
+        .neo-menu-item { color: #000; border-color: rgba(0,0,0,0.1); }
+        .neo-menu-item:hover, .neo-menu-item.active { background: #000; color: #06b6d4; }
+        
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
         .course-card {
-            background: white;
+            background: var(--bg-cream);
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0px #000;
+            transition: all 0.15s ease;
             position: relative;
         }
         .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px #000;
         }
-        .course-header {
+        .course-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .course-icon {
+            width: 60px;
+            height: 60px;
+            background: #06b6d4;
+            border: 3px solid #000;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-        }
-        .course-icon {
-            font-size: 40px;
-            color: #ff6b9d;
+            justify-content: center;
+            font-size: 28px;
             margin-right: 15px;
         }
-        .course-code {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-        }
-        .course-name {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .course-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .info-row {
-            display: flex;
-            align-items: center;
-            color: #666;
-            font-size: 14px;
-        }
-        .info-row i {
-            width: 20px;
-            color: #ff6b9d;
-            margin-right: 10px;
-        }
-        .btn-register {
-            width: 100%;
-            padding: 12px;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
-        }
-        .btn-register:disabled {
-            background: #ddd;
-            color: #999;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        .course-code { font-size: 22px; font-weight: 700; }
+        .course-name { font-family: var(--font-mono); font-size: 14px; color: #555; margin-bottom: 20px; }
+        .course-info { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .info-row { display: flex; align-items: center; font-family: var(--font-mono); font-size: 13px; color: #444; }
+        .info-row i { width: 25px; color: #06b6d4; }
+        .registered-badge {
             position: absolute;
             top: 15px;
             right: 15px;
+            background: #22c55e;
+            color: white;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid #000;
         }
-        .badge-success { background: #28a745; color: white; }
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            background: #06b6d4;
+            color: #000;
         }
-        .alert-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
+        .btn-register:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000;
         }
-        .alert-danger {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+        .btn-register:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px #000;
         }
-        .empty-state {
-            background: white;
-            padding: 60px;
-            border-radius: 15px;
-            text-align: center;
-            color: #999;
+        .btn-register:disabled {
+            background: #e0e0e0;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
         }
-        .empty-state i { font-size: 64px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-graduation-cap"></i> Register for Courses</h1>
-            <a href="/Student/Dashboard" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
-        </div>
+    <div class="neo-container">
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
+                <h2>AMS Student</h2>
+                <p>// Course Registration</p>
+            </div>
+            <nav class="neo-sidebar-menu">
+                <a href="/Student/Dashboard" class="neo-menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="/Student/MyCourses" class="neo-menu-item"><i class="fas fa-book"></i><span>My Courses</span></a>
+                <a href="/Student/RegisterCourses" class="neo-menu-item active"><i class="fas fa-graduation-cap"></i><span>Register</span></a>
+                <a href="/Student/Attendance" class="neo-menu-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+                <a href="/Student/Schedule" class="neo-menu-item"><i class="fas fa-clock"></i><span>Schedule</span></a>
+                <a href="/Student/Profile" class="neo-menu-item"><i class="fas fa-user"></i><span>Profile</span></a>
+                <a href="/Account/Logout" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </nav>
+        </aside>
 
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> @TempData["Success"]
+        <main class="neo-main">
+            <div class="neo-topbar">
+                <div>
+                    <h1><i class="fas fa-graduation-cap"></i> Register for Courses</h1>
+                    <p>// Select courses for this semester</p>
+                </div>
+                <div class="neo-topbar-actions">
+                    <a href="/Student/Dashboard" class="neo-btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
             </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
-            </div>
-        }
 
-        @if (Model == null || !Model.Any())
-        {
-            <div class="empty-state">
-                <i class="fas fa-book-open"></i>
-                <p>No courses available for registration</p>
-                <p style="font-size: 14px; margin-top: 10px; color: #666;">Contact admin to assign you to a section</p>
-            </div>
-        }
-        else
-        {
-            <div class="courses-grid">
-                @foreach (var assignment in Model)
-                {
-                    var isRegistered = registeredCourseIds.Contains(assignment.AssignmentId);
-                    <div class="course-card">
-                        @if (isRegistered)
-                        {
-                            <span class="badge badge-success"><i class="fas fa-check"></i> Registered</span>
-                        }
-                        
-                        <div class="course-header">
-                            <div class="course-icon">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <div>
-                                <div class="course-code">@assignment.Course?.CourseCode</div>
-                            </div>
-                        </div>
-                        <div class="course-name">@assignment.Course?.CourseName</div>
-                        <div class="course-info">
-                            <div class="info-row">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                <span>@assignment.Teacher?.User?.FullName</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-users"></i>
-                                <span>Section: @assignment.Section?.SectionName</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-calendar"></i>
-                                <span>@assignment.Semester?.SemesterName</span>
-                            </div>
-                            <div class="info-row">
-                                <i class="fas fa-clock"></i>
-                                <span>Credit Hours: @assignment.Course?.CreditHours</span>
-                            </div>
-                        </div>
-                        
-                        @if (isRegistered)
-                        {
-                            <button type="button" disabled class="btn-register">
-                                <i class="fas fa-check"></i> Already Registered
-                            </button>
-                        }
-                        else
-                        {
-                            <form method="post" action="/Student/RegisterForCourse" style="margin: 0;">
-                                <input type="hidden" name="assignmentId" value="@assignment.AssignmentId" />
-                                <button type="submit" class="btn-register">
-                                    <i class="fas fa-plus"></i> Register Now
-                                </button>
-                            </form>
-                        }
+            @if (TempData["Success"] != null)
+            {
+                <div class="neo-alert neo-alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="neo-alert neo-alert-danger"><i class="fas fa-exclamation-circle"></i> @TempData["Error"]</div>
+            }
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="neo-card">
+                    <div class="neo-empty">
+                        <i class="fas fa-book-open"></i>
+                        <p>No courses available for registration</p>
+                        <p style="font-size: 14px; margin-top: 10px;">Contact admin to assign you to a section</p>
                     </div>
-                }
-            </div>
-        }
+                </div>
+            }
+            else
+            {
+                <div class="courses-grid">
+                    @foreach (var assignment in Model)
+                    {
+                        var isRegistered = registeredCourseIds.Contains(assignment.AssignmentId);
+                        <div class="course-card">
+                            @if (isRegistered)
+                            {
+                                <span class="registered-badge"><i class="fas fa-check"></i> Registered</span>
+                            }
+                            
+                            <div class="course-header">
+                                <div class="course-icon"><i class="fas fa-book"></i></div>
+                                <div>
+                                    <div class="course-code">@assignment.Course?.CourseCode</div>
+                                </div>
+                            </div>
+                            <div class="course-name">@assignment.Course?.CourseName</div>
+                            <div class="course-info">
+                                <div class="info-row"><i class="fas fa-chalkboard-teacher"></i><span>@assignment.Teacher?.User?.FullName</span></div>
+                                <div class="info-row"><i class="fas fa-users"></i><span>Section: @assignment.Section?.SectionName</span></div>
+                                <div class="info-row"><i class="fas fa-calendar"></i><span>@assignment.Semester?.SemesterName</span></div>
+                                <div class="info-row"><i class="fas fa-clock"></i><span>Credit Hours: @assignment.Course?.CreditHours</span></div>
+                            </div>
+                            
+                            @if (isRegistered)
+                            {
+                                <button type="button" disabled class="btn-register">
+                                    <i class="fas fa-check"></i> Already Registered
+                                </button>
+                            }
+                            else
+                            {
+                                <form method="post" action="/Student/RegisterForCourse" style="margin: 0;">
+                                    <input type="hidden" name="assignmentId" value="@assignment.AssignmentId" />
+                                    <button type="submit" class="btn-register">
+                                        <i class="fas fa-plus"></i> Register Now
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </main>
     </div>
 </body>
 </html>

@@ -4,247 +4,218 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Manage Students</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { color: #667eea; font-size: 28px; }
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn-secondary:hover { background: #5a6268; }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        tr:hover { background: #f8f9fa; }
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .badge-success { background: #28a745; color: white; }
-        .badge-danger { background: #dc3545; color: white; }
-        .action-btns { display: flex; gap: 10px; }
-        .btn-sm {
-            padding: 8px 15px;
-            font-size: 12px;
-            border-radius: 6px;
-        }
-        .btn-info { background: #17a2b8; color: white; }
-        .btn-info:hover { background: #138496; }
-        select, input[type="text"], input[type="email"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-        .form-group { margin-bottom: 20px; }
-        label { font-weight: 600; color: #333; display: block; }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        .empty-state i { font-size: 64px; margin-bottom: 20px; }
-        .header-actions { display: flex; gap: 10px; }
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Students - Attendance Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/neo-brutalist.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-users"></i> Manage Students</h1>
-            <div class="header-actions">
-                <a href="#" onclick="showAddStudent()" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Add New Student
-                </a>
-                <a href="#" onclick="showAssignSection()" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Assign to Section
-                </a>
-                <a href="/Admin/Dashboard" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back
-                </a>
+    <div class="neo-container">
+        <!-- Admin Sidebar -->
+        <aside class="neo-sidebar">
+            <div class="neo-sidebar-header">
+                <h2>AMS Admin</h2>
+                <p>// Student Management</p>
             </div>
-        </div>
+            <nav class="neo-sidebar-menu">
+                <a href="/Admin/Dashboard" class="neo-menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                <a href="/Admin/Students" class="neo-menu-item active"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+                <a href="/Admin/Teachers" class="neo-menu-item"><i class="fas fa-chalkboard-teacher"></i><span>Teachers</span></a>
+                <a href="/Admin/Courses" class="neo-menu-item"><i class="fas fa-book"></i><span>Courses</span></a>
+                <a href="/Admin/Sessions" class="neo-menu-item"><i class="fas fa-calendar-alt"></i><span>Sessions</span></a>
+                <a href="/Admin/Departments" class="neo-menu-item"><i class="fas fa-building"></i><span>Departments</span></a>
+                <a href="/Admin/Reports" class="neo-menu-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+                <a href="/Account/Logout" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+            </nav>
+        </aside>
 
-        <div class="card">
-            <h2 style="margin-bottom: 20px; color: #333;">All Students</h2>
-            
-            @if (Model == null || !Model.Any())
-            {
-                <div class="empty-state">
-                    <i class="fas fa-user-graduate"></i>
-                    <p>No students found in the system</p>
+        <!-- Main Content -->
+        <main class="neo-main">
+            <!-- Top Bar -->
+            <div class="neo-topbar">
+                <div>
+                    <h1><i class="fas fa-user-graduate"></i> Manage Students</h1>
+                    <p>// Add, edit, and manage student records</p>
                 </div>
-            }
-            else
-            {
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Roll No</th>
-                            <th>Student Name</th>
-                            <th>Email</th>
-                            <th>Department</th>
-                            <th>Section</th>
-                            <th>Session</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var student in Model)
-                        {
-                            <tr>
-                                <td><strong>@student.RollNumber</strong></td>
-                                <td>@student.User?.FullName</td>
-                                <td>@student.User?.Email</td>
-                                <td>@student.Department?.DepartmentName</td>
-                                <td>@Html.Raw(student.Section?.SectionName ?? "<span style='color: #dc3545'>Not Assigned</span>")</td>
-                                <td>@(student.Section?.Semester?.Session?.SessionName ?? "-")</td>
-                                <td>
-                                    @if (student.User?.IsActive == true)
-                                    {
-                                        <span class="badge badge-success">Active</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-danger">Inactive</span>
-                                    }
-                                </td>
-                                <td class="action-btns">
-                                    <button onclick="assignToSection(@student.StudentId, '@student.User?.FullName')" class="btn btn-sm btn-info">
-                                        <i class="fas fa-edit"></i> Section
-                                    </button>
-                                    <button onclick="assignCourseToStudent(@student.StudentId, '@student.User?.FullName')" class="btn btn-sm" style="background: #28a745; color: white;">
-                                        <i class="fas fa-book"></i> Course
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+                <div class="neo-topbar-actions">
+                    <button onclick="showAddStudent()" class="neo-btn neo-btn-primary">
+                        <i class="fas fa-user-plus"></i> Add Student
+                    </button>
+                    <a href="/Admin/Dashboard" class="neo-btn">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+
+            <!-- Students Table -->
+            <div class="neo-card">
+                <div class="neo-card-header">
+                    <h3>All Students</h3>
+                    <span style="font-family: var(--font-mono); font-size: 13px;">Total: @(Model?.Count ?? 0)</span>
+                </div>
+
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="neo-empty">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>No students found in the system</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="neo-table-wrapper">
+                        <table class="neo-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Section</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var student in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@student.RollNumber</strong></td>
+                                        <td>@student.User?.FullName</td>
+                                        <td>@student.User?.Email</td>
+                                        <td>@student.Department?.DepartmentName</td>
+                                        <td>
+                                            @if (student.Section != null)
+                                            {
+                                                <span class="neo-badge neo-badge-info">@student.Section.SectionName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="neo-badge neo-badge-warning">Not Assigned</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (student.User?.IsActive == true)
+                                            {
+                                                <span class="neo-badge neo-badge-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="neo-badge neo-badge-danger">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 8px;">
+                                                <button onclick="assignToSection(@student.StudentId, '@student.User?.FullName')" class="neo-btn neo-btn-sm neo-btn-info">
+                                                    <i class="fas fa-edit"></i> Section
+                                                </button>
+                                                <button onclick="assignCourseToStudent(@student.StudentId, '@student.User?.FullName')" class="neo-btn neo-btn-sm neo-btn-success">
+                                                    <i class="fas fa-book"></i> Course
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </main>
     </div>
 
     <!-- Add Student Modal -->
-    <div id="addStudentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
-            <h3 style="margin-bottom: 25px; color: #667eea;">
-                <i class="fas fa-user-plus"></i> Add New Student
-            </h3>
+    <div id="addStudentModal" class="neo-modal-overlay" style="display: none;">
+        <div class="neo-modal">
+            <div class="neo-modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New Student</h3>
+                <button onclick="closeAddStudent()" class="neo-modal-close">×</button>
+            </div>
             <form action="/Admin/CreateStudent" method="post">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" name="fullName" required placeholder="Enter student's full name" />
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" name="fullName" class="neo-input" required placeholder="Enter student's full name" />
                 </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" required placeholder="Enter email address" />
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" name="email" class="neo-input" required placeholder="Enter email address" />
                 </div>
-
-                <div class="form-group">
-                    <label>Roll Number</label>
-                    <input type="text" name="rollNumber" required placeholder="Enter roll number (e.g., 21K-1234)" />
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-id-card"></i> Roll Number</label>
+                    <input type="text" name="rollNumber" class="neo-input" required placeholder="e.g., 2024-CS-001" />
                 </div>
-
-                <div class="form-group">
-                    <label>Department</label>
-                    <select name="departmentId" required id="deptSelect">
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-building"></i> Department</label>
+                    <select name="departmentId" class="neo-select" required id="deptSelect">
                         <option value="">-- Choose Department --</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label>Default Password</label>
-                    <input type="text" name="password" value="Test@123" required />
-                    <small style="color: #999; font-size: 12px;">Default: Test@123 (Student can change later)</small>
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-key"></i> Default Password</label>
+                    <input type="text" name="password" class="neo-input" value="Test@123" required />
+                    <small style="font-family: var(--font-mono); color: #666; font-size: 11px;">Default: Test@123</small>
                 </div>
-
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-                    <button type="button" onclick="closeAddStudent()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Student</button>
+                    <button type="button" onclick="closeAddStudent()" class="neo-btn">Cancel</button>
+                    <button type="submit" class="neo-btn neo-btn-primary">Create Student</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Assign Section Modal -->
-    <div id="assignModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
-            <h3 style="margin-bottom: 20px; color: #667eea;">Assign Student to Section</h3>
+    <div id="assignModal" class="neo-modal-overlay" style="display: none;">
+        <div class="neo-modal">
+            <div class="neo-modal-header">
+                <h3><i class="fas fa-users"></i> Assign to Section</h3>
+                <button onclick="closeModal()" class="neo-modal-close">×</button>
+            </div>
             <form id="assignForm" method="post" action="/Admin/AssignStudentToSection">
                 <input type="hidden" id="studentId" name="studentId" />
-                
-                <div class="form-group">
-                    <label>Student</label>
-                    <input type="text" id="studentName" readonly style="background: #f8f9fa;" />
+                <div class="neo-form-group">
+                    <label class="neo-label">Student</label>
+                    <input type="text" id="studentName" class="neo-input" readonly style="background: var(--bg-paper);" />
                 </div>
-
-                <div class="form-group">
-                    <label>Select Section</label>
-                    <select name="sectionId" required id="sectionSelect">
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-users"></i> Select Section</label>
+                    <select name="sectionId" class="neo-select" required id="sectionSelect">
                         <option value="">-- Choose Section --</option>
                     </select>
                 </div>
-
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-                    <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Assign</button>
+                    <button type="button" onclick="closeModal()" class="neo-btn">Cancel</button>
+                    <button type="submit" class="neo-btn neo-btn-primary">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Assign Course Modal -->
+    <div id="assignCourseModal" class="neo-modal-overlay" style="display: none;">
+        <div class="neo-modal">
+            <div class="neo-modal-header">
+                <h3><i class="fas fa-book"></i> Assign Course</h3>
+                <button onclick="closeCourseModal()" class="neo-modal-close">×</button>
+            </div>
+            <form method="post" action="/Admin/AssignCourseToStudent">
+                <input type="hidden" id="courseStudentId" name="studentId" />
+                <div class="neo-form-group">
+                    <label class="neo-label">Student</label>
+                    <input type="text" id="courseStudentName" class="neo-input" readonly style="background: var(--bg-paper);" />
+                </div>
+                <div class="neo-form-group">
+                    <label class="neo-label"><i class="fas fa-book"></i> Select Course</label>
+                    <select name="assignmentId" class="neo-select" required id="courseSelect">
+                        <option value="">-- Loading Courses --</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
+                    <button type="button" onclick="closeCourseModal()" class="neo-btn">Cancel</button>
+                    <button type="submit" class="neo-btn neo-btn-success">Assign Course</button>
                 </div>
             </form>
         </div>
@@ -255,11 +226,9 @@
             document.getElementById('addStudentModal').style.display = 'flex';
             loadDepartmentsForStudent();
         }
-
         function closeAddStudent() {
             document.getElementById('addStudentModal').style.display = 'none';
         }
-
         async function loadDepartmentsForStudent() {
             try {
                 const response = await fetch('/Admin/GetDepartments');
@@ -269,26 +238,17 @@
                 departments.forEach(dept => {
                     select.innerHTML += `<option value="${dept.departmentId}">${dept.departmentName}</option>`;
                 });
-            } catch (error) {
-                console.error('Error loading departments:', error);
-            }
+            } catch (error) { console.error('Error loading departments:', error); }
         }
-
-        function showAssignSection() {
-            document.getElementById('assignModal').style.display = 'flex';
-            loadSections();
-        }
-
         function assignToSection(studentId, studentName) {
             document.getElementById('studentId').value = studentId;
             document.getElementById('studentName').value = studentName;
-            showAssignSection();
+            document.getElementById('assignModal').style.display = 'flex';
+            loadSections();
         }
-
         function closeModal() {
             document.getElementById('assignModal').style.display = 'none';
         }
-
         async function loadSections() {
             try {
                 const response = await fetch('/Admin/GetSections');
@@ -298,78 +258,38 @@
                 sections.forEach(section => {
                     select.innerHTML += `<option value="${section.sectionId}">${section.sectionName} (${section.sessionName})</option>`;
                 });
-            } catch (error) {
-                console.error('Error loading sections:', error);
-            }
+            } catch (error) { console.error('Error loading sections:', error); }
         }
-
-        // Course Assignment Functions
         function assignCourseToStudent(studentId, studentName) {
             document.getElementById('courseStudentId').value = studentId;
             document.getElementById('courseStudentName').value = studentName;
             document.getElementById('assignCourseModal').style.display = 'flex';
             loadCoursesForStudent(studentId);
         }
-
         function closeCourseModal() {
             document.getElementById('assignCourseModal').style.display = 'none';
         }
-
         async function loadCoursesForStudent(studentId) {
             try {
                 const response = await fetch(`/Admin/GetCoursesForStudent?studentId=${studentId}`);
                 const data = await response.json();
                 const select = document.getElementById('courseSelect');
-                
                 if (!data.availableCourses || data.availableCourses.length === 0) {
-                    select.innerHTML = '<option value="">No courses available (student must be assigned to a section first)</option>';
+                    select.innerHTML = '<option value="">No courses available</option>';
                     return;
                 }
-
                 select.innerHTML = '<option value="">-- Choose Course --</option>';
                 data.availableCourses.forEach(course => {
                     const isRegistered = data.registeredIds && data.registeredIds.includes(course.assignmentId);
                     const optionText = `${course.courseCode} - ${course.courseName} (${course.teacherName})`;
                     if (isRegistered) {
-                        select.innerHTML += `<option value="${course.assignmentId}" disabled>${optionText} ✓ Already Registered</option>`;
+                        select.innerHTML += `<option value="${course.assignmentId}" disabled>${optionText} ✓ Registered</option>`;
                     } else {
                         select.innerHTML += `<option value="${course.assignmentId}">${optionText}</option>`;
                     }
                 });
-            } catch (error) {
-                console.error('Error loading courses:', error);
-            }
+            } catch (error) { console.error('Error loading courses:', error); }
         }
     </script>
-
-    <!-- Assign Course Modal -->
-    <div id="assignCourseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 550px; width: 90%;">
-            <h3 style="margin-bottom: 20px; color: #28a745;">
-                <i class="fas fa-book"></i> Assign Course to Student
-            </h3>
-            <form method="post" action="/Admin/AssignCourseToStudent">
-                <input type="hidden" id="courseStudentId" name="studentId" />
-                
-                <div class="form-group">
-                    <label>Student</label>
-                    <input type="text" id="courseStudentName" readonly style="background: #f8f9fa;" />
-                </div>
-
-                <div class="form-group">
-                    <label>Select Course</label>
-                    <select name="assignmentId" required id="courseSelect">
-                        <option value="">-- Loading Courses --</option>
-                    </select>
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px;">
-                    <button type="button" onclick="closeCourseModal()" class="btn btn-secondary">Cancel</button>
-                    <button type="submit" class="btn" style="background: #28a745; color: white;">Assign Course</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </body>
 </html>
-
