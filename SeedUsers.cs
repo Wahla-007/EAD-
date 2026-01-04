@@ -198,8 +198,8 @@ public static class SeedUsers
         if (assignment1 != null && !context.Timetables.Any())
         {
             context.Timetables.AddRange(
-                new Timetable { AssignmentId = assignment1.AssignmentId, DayOfWeek = DayOfWeek.Monday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-1", IsActive = true },
-                new Timetable { AssignmentId = assignment1.AssignmentId, DayOfWeek = DayOfWeek.Wednesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-1", IsActive = true }
+                new Timetable { AssignmentId = assignment1.AssignmentId, DayOfWeek = (int)DayOfWeek.Monday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-1", IsActive = true },
+                new Timetable { AssignmentId = assignment1.AssignmentId, DayOfWeek = (int)DayOfWeek.Wednesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "Lab-1", IsActive = true }
             );
             context.SaveChanges();
         }
