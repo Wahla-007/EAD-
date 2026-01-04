@@ -342,22 +342,22 @@
             <div class="stats-grid">
                 <div class="stat-card green">
                     <div class="stat-icon green"><i class="fas fa-book"></i></div>
-                    <div class="stat-value">1</div>
+                    <div class="stat-value">@Model.TotalCourses</div>
                     <div class="stat-label">My Courses</div>
                 </div>
                 <div class="stat-card orange">
                     <div class="stat-icon orange"><i class="fas fa-user-graduate"></i></div>
-                    <div class="stat-value">9</div>
+                    <div class="stat-value">@Model.TotalStudents</div>
                     <div class="stat-label">Total Students</div>
                 </div>
                 <div class="stat-card cyan">
                     <div class="stat-icon cyan"><i class="fas fa-calendar-check"></i></div>
-                    <div class="stat-value">2</div>
+                    <div class="stat-value">@ViewBag.WeeklyClasses</div>
                     <div class="stat-label">Classes/Week</div>
                 </div>
                 <div class="stat-card yellow">
                     <div class="stat-icon yellow"><i class="fas fa-percentage"></i></div>
-                    <div class="stat-value">82%</div>
+                    <div class="stat-value">@Model.AttendancePercentage.ToString("F1")%</div>
                     <div class="stat-label">Avg Attendance</div>
                 </div>
             </div>

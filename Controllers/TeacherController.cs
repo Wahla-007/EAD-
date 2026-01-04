@@ -28,15 +28,58 @@ namespace AttendanceManagementSystem.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
             var username = User.FindFirstValue(ClaimTypes.Name);
 
-            var teacher = await _teacherService.GetTeacherByUserIdAsync(userId);
+            var teacher = await _context.Teachers
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.UserId == userId);
+
+            if (teacher == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Get teacher's courses
+            var courses = await _context.CourseAssignments
+                .Include(ca => ca.Course)
+                .Include(ca => ca.Section)
+                .Where(ca => ca.TeacherId == teacher.TeacherId && ca.IsActive)
+                .ToListAsync();
+
+            var totalCourses = courses.Count;
+            
+            // Get unique students count
+            var totalStudents = await _context.StudentCourseRegistrations
+                .Where(r => courses.Select(c => c.AssignmentId).Contains(r.AssignmentId))
+                .Select(r => r.StudentId)
+                .Distinct()
+                .CountAsync();
+
+            // Get classes per week (from timetable)
+            var totalClasses = await _context.Timetables
+                .Where(t => courses.Select(c => c.AssignmentId).Contains(t.AssignmentId) && t.IsActive)
+                .CountAsync();
+
+            var attendanceRecords = await _context.Attendances
+                .Where(a => courses.Select(c => c.AssignmentId).Contains(a.Registration.AssignmentId))
+                .ToListAsync();
+
+            var avgAttendance = attendanceRecords.Any() 
+                ? (decimal)(attendanceRecords.Count(a => a.Status == "Present") * 100.0 / attendanceRecords.Count)
+                : 0;
 
             var viewModel = new DashboardViewModel
             {
                 UserId = userId,
                 Username = username ?? "Teacher",
                 Role = "Teacher",
-                FullName = teacher?.User?.FullName ?? "Teacher"
+                FullName = teacher.User?.FullName ?? "Teacher",
+                TotalCourses = totalCourses,
+                TotalStudents = totalStudents,
+                TotalSections = courses.Select(c => c.SectionId).Distinct().Count(), // Reusing TotalSections for Classes/Week or similar
+                AttendancePercentage = avgAttendance,
+                // Using TotalSections property in VM to store classes count for now, or just pass in ViewBag
             };
+            
+            ViewBag.WeeklyClasses = totalClasses;
 
             return View(viewModel);
         }
