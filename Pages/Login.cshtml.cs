@@ -85,14 +85,13 @@ namespace AttendanceManagementSystem.Pages
                 HttpContext.Session.SetString("FullName", result.FullName);
                 HttpContext.Session.SetString("IsFirstLogin", result.IsFirstLogin.ToString());
 
-                // Check if first login (redirect to change password)
-                if (result.IsFirstLogin)
-                {
-                    return RedirectToPage("/ChangePassword");
-                }
+                // Store redirect URL in TempData for client-side redirect
+                string redirectUrl = result.IsFirstLogin ? "/ChangePassword" : GetDashboardUrl(result.Role);
+                TempData["RedirectUrl"] = redirectUrl;
+                TempData["LoginSuccess"] = "true";
 
-                // Redirect based on role
-                return RedirectToDashboard(result.Role);
+                // Return page to trigger client-side redirect
+                return Page();
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -114,6 +113,17 @@ namespace AttendanceManagementSystem.Pages
                 "Teacher" => Redirect("/Teacher/Dashboard"),
                 "Student" => Redirect("/Student/Dashboard"),
                 _ => RedirectToPage("/Login")
+            };
+        }
+
+        private string GetDashboardUrl(string? role)
+        {
+            return role switch
+            {
+                "Admin" => "/Admin/Dashboard",
+                "Teacher" => "/Teacher/Dashboard",
+                "Student" => "/Student/Dashboard",
+                _ => "/Login"
             };
         }
     }

@@ -79,6 +79,13 @@ builder.Services.AddScoped<AttendanceManagementSystem.Services.Interfaces.IAdmin
 
 var app = builder.Build();
 
+// Seed test users with proper password hashes
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AttendanceManagementDbContext>();
+    SeedUsers.SeedTestUsers(context);
+}
+
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {

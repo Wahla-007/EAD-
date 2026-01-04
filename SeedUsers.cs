@@ -1,0 +1,103 @@
+// Quick script to seed test users with proper password hashes
+// Run in Program.cs startup or as a separate tool
+
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using AttendanceManagementSystem.Data;
+using AttendanceManagementSystem.Data.Entities;
+
+public static class SeedUsers
+{
+    public static void SeedTestUsers(AttendanceManagementDbContext context)
+    {
+        // Check if admin already exists with correct format
+        var adminUser = context.Users.FirstOrDefault(u => u.Username == "admin");
+        
+        if (adminUser == null)
+        {
+            // Create Admin
+            var (adminHash, adminSalt) = HashPassword("Test@123");
+            context.Users.Add(new User
+            {
+                Username = "admin",
+                Email = "admin@ams.com",
+                PasswordHash = adminHash,
+                PasswordSalt = adminSalt,
+                FullName = "System Administrator",
+                Role = "Admin",
+                IsFirstLogin = false,
+                IsActive = true,
+                CreatedDate = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            // Update existing admin password
+            var (adminHash, adminSalt) = HashPassword("Test@123");
+            adminUser.PasswordHash = adminHash;
+            adminUser.PasswordSalt = adminSalt;
+        }
+
+        // Check/Create Teacher
+        var teacherUser = context.Users.FirstOrDefault(u => u.Username == "teacher1");
+        if (teacherUser == null)
+        {
+            var (hash, salt) = HashPassword("Test@123");
+            context.Users.Add(new User
+            {
+                Username = "teacher1",
+                Email = "teacher1@ams.com",
+                PasswordHash = hash,
+                PasswordSalt = salt,
+                FullName = "John Teacher",
+                Role = "Teacher",
+                IsFirstLogin = false,
+                IsActive = true,
+                CreatedDate = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            var (hash, salt) = HashPassword("Test@123");
+            teacherUser.PasswordHash = hash;
+            teacherUser.PasswordSalt = salt;
+        }
+
+        // Check/Create Student
+        var studentUser = context.Users.FirstOrDefault(u => u.Username == "student1");
+        if (studentUser == null)
+        {
+            var (hash, salt) = HashPassword("Test@123");
+            context.Users.Add(new User
+            {
+                Username = "student1",
+                Email = "student1@ams.com",
+                PasswordHash = hash,
+                PasswordSalt = salt,
+                FullName = "Jane Student",
+                Role = "Student",
+                IsFirstLogin = false,
+                IsActive = true,
+                CreatedDate = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            var (hash, salt) = HashPassword("Test@123");
+            studentUser.PasswordHash = hash;
+            studentUser.PasswordSalt = salt;
+        }
+
+        context.SaveChanges();
+        Console.WriteLine("Test users seeded/updated successfully!");
+    }
+
+    private static (string hash, string salt) HashPassword(string password)
+    {
+        using var hmac = new HMACSHA512();
+        var salt = Convert.ToBase64String(hmac.Key);
+        var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+        return (hash, salt);
+    }
+}

@@ -426,6 +426,14 @@
                 toggleIcon.classList.add('fa-eye');
             }
         }
+
+        // Check if login was successful and redirect
+        @if (TempData["LoginSuccess"] != null && TempData["RedirectUrl"] != null)
+        {
+            <text>
+            window.location.href = '@TempData["RedirectUrl"]';
+            </text>
+        }
     </script>
 </body>
 </html>
