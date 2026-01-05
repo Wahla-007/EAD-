@@ -10,10 +10,13 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 
-# Create writable directory for SQLite database
-RUN mkdir -p /app/data && chmod 777 /app/data
+# Create writable directories for SQLite database and Data Protection keys
+RUN mkdir -p /app/data /app/keys && chmod 777 /app/data /app/keys
 
 COPY --from=build /app/publish .
+
+# Add volume for key persistence
+VOLUME ["/app/keys"]
 
 # Environment variables
 ENV ASPNETCORE_URLS=http://+:8080

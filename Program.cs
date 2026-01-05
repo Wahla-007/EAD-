@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AttendanceManagementSystem.Data;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,9 +69,27 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromHours(2);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 });
 
 builder.Services.AddHttpContextAccessor();
+
+// Configure Data Protection to persist keys
+var keysDirectory = Path.Combine(Directory.GetCurrentDirectory(), "keys");
+try
+{
+    Directory.CreateDirectory(keysDirectory);
+}
+catch (Exception ex)
+{
+    // Log the error but continue - the app will fail on first use if keys can't be persisted
+    Console.WriteLine($"Warning: Failed to create keys directory at {keysDirectory}: {ex.Message}");
+}
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory))
+    .SetApplicationName("AttendanceManagementSystem");
 
 // Register Services
 builder.Services.AddScoped<AttendanceManagementSystem.Services.Interfaces.IAuthService, AttendanceManagementSystem.Services.Implementations.AuthService>();
