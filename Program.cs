@@ -143,10 +143,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
+
 // Add middleware to handle invalid session cookies
 app.UseMiddleware<AttendanceManagementSystem.Middleware.SessionCookieMiddleware>();
 
-app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

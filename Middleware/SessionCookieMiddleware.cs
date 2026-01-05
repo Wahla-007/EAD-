@@ -34,6 +34,11 @@ namespace AttendanceManagementSystem.Middleware
                     // Redirect to login page
                     context.Response.Redirect("/Login");
                 }
+                else
+                {
+                    // Re-throw if response has already started
+                    throw;
+                }
             }
         }
     }
