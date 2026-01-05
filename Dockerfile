@@ -15,9 +15,6 @@ RUN mkdir -p /app/data /app/keys && chmod 777 /app/data /app/keys
 
 COPY --from=build /app/publish .
 
-# Add volume for key persistence
-VOLUME ["/app/keys"]
-
 # Environment variables
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
