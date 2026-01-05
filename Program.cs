@@ -80,6 +80,12 @@ builder.Services.AddScoped<AttendanceManagementSystem.Services.Interfaces.IAdmin
 
 var app = builder.Build();
 
+// Configure Forwarded Headers for DigitalOcean/Proxy
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
+
 // Seed test users with proper password hashes
 using (var scope = app.Services.CreateScope())
 {
