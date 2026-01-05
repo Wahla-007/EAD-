@@ -24,12 +24,16 @@ namespace AttendanceManagementSystem.Middleware
             {
                 _logger.LogWarning(ex, "Invalid session cookie detected. Clearing cookies and redirecting.");
                 
-                // Clear the session cookie
-                context.Response.Cookies.Delete(".AspNetCore.Session");
-                context.Response.Cookies.Delete("AccessToken");
-                
-                // Redirect to login page
-                context.Response.Redirect("/Login");
+                // Only handle if response hasn't started
+                if (!context.Response.HasStarted)
+                {
+                    // Clear the session cookies
+                    context.Response.Cookies.Delete(".AttendanceSystem.Session");
+                    context.Response.Cookies.Delete("AccessToken");
+                    
+                    // Redirect to login page
+                    context.Response.Redirect("/Login");
+                }
             }
         }
     }
