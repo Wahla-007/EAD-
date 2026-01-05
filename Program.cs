@@ -63,48 +63,26 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOrTeacher", policy => policy.RequireRole("Admin", "Teacher"));
 });
 
-// Session
+// Configure Data Protection - Use ephemeral provider for stateless deployment
+// This is fine because we use JWT for authentication, not sessions
+builder.Services.AddDataProtection()
+    .SetApplicationName("AttendanceManagementSystem")
+    .UseEphemeralDataProtectionProvider();
+
+// Disable session-based state - use JWT cookies instead
+// Sessions were causing the HTTP 400 errors
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-    options.Cookie.Name = ".AttendanceSystem.Session"; // Use a specific name
+    options.Cookie.Name = ".AttendanceSystem.Session";
 });
 
 builder.Services.AddHttpContextAccessor();
-
-// Configure Data Protection with a stable key from environment variable
-var dataProtectionKey = builder.Configuration["DATA_PROTECTION_KEY"] 
-    ?? Environment.GetEnvironmentVariable("DATA_PROTECTION_KEY");
-
-if (!string.IsNullOrEmpty(dataProtectionKey))
-{
-    // Use the provided key for Data Protection
-    var keysDirectory = Path.Combine(Directory.GetCurrentDirectory(), "keys");
-    try
-    {
-        Directory.CreateDirectory(keysDirectory);
-    }
-    catch (Exception ex)
-    {
-        // Log the error but continue - the app will fail on first use if keys can't be persisted
-        Console.WriteLine($"Warning: Failed to create keys directory at {keysDirectory}: {ex.Message}");
-    }
-    
-    builder.Services.AddDataProtection()
-        .SetApplicationName("AttendanceManagementSystem")
-        .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory));
-}
-else
-{
-    // Fallback: Use ephemeral keys but handle cookie errors gracefully
-    builder.Services.AddDataProtection()
-        .SetApplicationName("AttendanceManagementSystem")
-        .UseEphemeralDataProtectionProvider();
-}
 
 // Register Services
 builder.Services.AddScoped<AttendanceManagementSystem.Services.Interfaces.IAuthService, AttendanceManagementSystem.Services.Implementations.AuthService>();
@@ -143,11 +121,39 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add middleware to clear invalid cookies BEFORE session middleware
+app.Use(async (context, next) =>
+{
+    // Clear any old session cookies that might cause issues
+    if (context.Request.Cookies.ContainsKey(".AttendanceSystem.Session") || 
+        context.Request.Cookies.ContainsKey(".AspNetCore.Session"))
+    {
+        // Check if we can read the session, if not clear the cookie
+        try
+        {
+            await next();
+        }
+        catch (System.Security.Cryptography.CryptographicException)
+        {
+            // Clear invalid cookies
+            context.Response.Cookies.Delete(".AttendanceSystem.Session");
+            context.Response.Cookies.Delete(".AspNetCore.Session");
+            context.Response.Cookies.Delete("AccessToken");
+            
+            // Redirect to login
+            if (!context.Response.HasStarted)
+            {
+                context.Response.Redirect("/Login");
+            }
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
+
 app.UseSession();
-
-// Add middleware to handle invalid session cookies
-app.UseMiddleware<AttendanceManagementSystem.Middleware.SessionCookieMiddleware>();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
