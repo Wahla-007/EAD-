@@ -84,6 +84,14 @@ _NCrunch_*
 *.ldf
 *.ndf
 
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# Data Protection keys
+keys/
+
 # User-specific passwords/connection strings
 appsettings.*.json
 !appsettings.json
