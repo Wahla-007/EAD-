@@ -77,7 +77,15 @@ builder.Services.AddHttpContextAccessor();
 
 // Configure Data Protection to persist keys
 var keysDirectory = Path.Combine(Directory.GetCurrentDirectory(), "keys");
-Directory.CreateDirectory(keysDirectory);
+try
+{
+    Directory.CreateDirectory(keysDirectory);
+}
+catch (Exception ex)
+{
+    // Log the error but continue - the app will fail on first use if keys can't be persisted
+    Console.WriteLine($"Warning: Failed to create keys directory at {keysDirectory}: {ex.Message}");
+}
 
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory))
