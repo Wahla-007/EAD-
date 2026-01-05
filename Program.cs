@@ -71,25 +71,40 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.Name = ".AttendanceSystem.Session"; // Use a specific name
 });
 
 builder.Services.AddHttpContextAccessor();
 
-// Configure Data Protection to persist keys
-var keysDirectory = Path.Combine(Directory.GetCurrentDirectory(), "keys");
-try
-{
-    Directory.CreateDirectory(keysDirectory);
-}
-catch (Exception ex)
-{
-    // Log the error but continue - the app will fail on first use if keys can't be persisted
-    Console.WriteLine($"Warning: Failed to create keys directory at {keysDirectory}: {ex.Message}");
-}
+// Configure Data Protection with a stable key from environment variable
+var dataProtectionKey = builder.Configuration["DATA_PROTECTION_KEY"] 
+    ?? Environment.GetEnvironmentVariable("DATA_PROTECTION_KEY");
 
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory))
-    .SetApplicationName("AttendanceManagementSystem");
+if (!string.IsNullOrEmpty(dataProtectionKey))
+{
+    // Use the provided key for Data Protection
+    var keysDirectory = Path.Combine(Directory.GetCurrentDirectory(), "keys");
+    try
+    {
+        Directory.CreateDirectory(keysDirectory);
+    }
+    catch (Exception ex)
+    {
+        // Log the error but continue - the app will fail on first use if keys can't be persisted
+        Console.WriteLine($"Warning: Failed to create keys directory at {keysDirectory}: {ex.Message}");
+    }
+    
+    builder.Services.AddDataProtection()
+        .SetApplicationName("AttendanceManagementSystem")
+        .PersistKeysToFileSystem(new DirectoryInfo(keysDirectory));
+}
+else
+{
+    // Fallback: Use ephemeral keys but handle cookie errors gracefully
+    builder.Services.AddDataProtection()
+        .SetApplicationName("AttendanceManagementSystem")
+        .UseEphemeralDataProtectionProvider();
+}
 
 // Register Services
 builder.Services.AddScoped<AttendanceManagementSystem.Services.Interfaces.IAuthService, AttendanceManagementSystem.Services.Implementations.AuthService>();
@@ -127,6 +142,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Add middleware to handle invalid session cookies
+app.UseMiddleware<AttendanceManagementSystem.Middleware.SessionCookieMiddleware>();
 
 app.UseSession();
 app.UseAuthentication();
