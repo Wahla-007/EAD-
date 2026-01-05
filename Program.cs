@@ -69,8 +69,8 @@ builder.Services.AddDataProtection()
     .SetApplicationName("AttendanceManagementSystem")
     .UseEphemeralDataProtectionProvider();
 
-// Disable session-based state - use JWT cookies instead
-// Sessions were causing the HTTP 400 errors
+// Configure session state with memory cache for temporary UI state
+// JWT cookies handle authentication
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -124,11 +124,11 @@ app.UseRouting();
 // Add middleware to clear invalid cookies BEFORE session middleware
 app.Use(async (context, next) =>
 {
-    // Clear any old session cookies that might cause issues
+    // Wrap session processing in try-catch when session cookies are present
+    // to handle cryptographic exceptions from invalid/old cookies
     if (context.Request.Cookies.ContainsKey(".AttendanceSystem.Session") || 
         context.Request.Cookies.ContainsKey(".AspNetCore.Session"))
     {
-        // Check if we can read the session, if not clear the cookie
         try
         {
             await next();
