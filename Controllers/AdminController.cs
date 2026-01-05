@@ -31,12 +31,30 @@ namespace AttendanceManagementSystem.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
             var username = User.FindFirstValue(ClaimTypes.Name);
 
+            // Query database for real statistics
+            var totalStudents = await _context.Students.CountAsync();
+            var totalTeachers = await _context.Teachers.CountAsync();
+            var totalCourses = await _context.Courses.Where(c => c.IsActive).CountAsync();
+            var totalSections = await _context.Sections.CountAsync();
+
+            // Calculate attendance percentage
+            var totalAttendanceRecords = await _context.Attendances.CountAsync();
+            var presentCount = await _context.Attendances.Where(a => a.Status == "Present").CountAsync();
+            var attendancePercentage = totalAttendanceRecords > 0 
+                ? Math.Round((decimal)presentCount * 100 / totalAttendanceRecords, 1) 
+                : 0;
+
             var viewModel = new DashboardViewModel
             {
                 UserId = userId,
                 Username = username ?? "Admin",
                 Role = "Admin",
-                FullName = User.FindFirstValue(ClaimTypes.GivenName) ?? "Administrator"
+                FullName = User.FindFirstValue(ClaimTypes.GivenName) ?? "Administrator",
+                TotalStudents = totalStudents,
+                TotalTeachers = totalTeachers,
+                TotalCourses = totalCourses,
+                TotalSections = totalSections,
+                AttendancePercentage = attendancePercentage
             };
 
             return View(viewModel);
