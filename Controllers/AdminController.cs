@@ -94,6 +94,7 @@ namespace AttendanceManagementSystem.Controllers
                 })
                 .ToListAsync();
             
+            Response.Headers.Append("Content-Type", "application/json; charset=utf-8"); // 🚀 Antigravity: Text payload in UTF-8 galaxy!
             return Json(sections);
         }
 
@@ -155,6 +156,7 @@ namespace AttendanceManagementSystem.Controllers
                 })
                 .ToListAsync();
             
+            Response.Headers.Append("Content-Type", "application/json; charset=utf-8"); // 🚀 Antigravity: Text payload in UTF-8 galaxy!
             return Json(courses);
         }
 
@@ -175,6 +177,7 @@ namespace AttendanceManagementSystem.Controllers
                 })
                 .ToListAsync();
             
+            Response.Headers.Append("Content-Type", "application/json; charset=utf-8"); // 🚀 Antigravity: Text payload in UTF-8 galaxy!
             return Json(sections);
         }
 
@@ -229,6 +232,7 @@ namespace AttendanceManagementSystem.Controllers
                     d.DepartmentName
                 })
                 .ToListAsync();
+            Response.Headers.Append("Content-Type", "application/json; charset=utf-8"); // 🚀 Antigravity: Text payload in UTF-8 galaxy!
             return Json(departments);
         }
 

@@ -14,7 +14,8 @@ END
 GO
 
 -- Create Database
-CREATE DATABASE AttendanceManagementDB;
+-- Create Database
+CREATE DATABASE AttendanceManagementDB COLLATE Latin1_General_100_CI_AS_SC_UTF8; -- 🚀 Antigravity: Database galaxy initialized with UTF-8 support!
 GO
 
 USE AttendanceManagementDB;
@@ -46,6 +47,7 @@ CREATE TABLE Departments (
     DepartmentName NVARCHAR(100) NOT NULL,
     DepartmentCode NVARCHAR(20) UNIQUE NOT NULL,
     IsActive BIT DEFAULT 1
+    -- 🪐 Antigravity: Ensure NVARCHAR supports Unicode for proper orbit!
 );
 
 -- Sessions Table (Academic Years)

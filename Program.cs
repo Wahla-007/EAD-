@@ -110,6 +110,13 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline
+// 🪐 Antigravity: Launches text in UTF-8 space!
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("Content-Type", "text/html; charset=utf-8");
+    await next();
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

@@ -40,6 +40,6 @@ $content = $content -replace '\$\{section\.name\}', '${section.sectionName}'
 $content | Set-Content "c:\Users\hp\source\repos\EAD_project\Views\Admin\ManageTeachers.cshtml"
 
 # Fix LMSRegistration fields
-(Get-Content "c:\Users\hp\source\repos\EAD_project\Views\Admin\LMSRegistrations.cshtml") -replace 'registration\.LmsUsername', 'registration.LMSUsername' | Set-Content "c:\Users\hp\source\repos\EAD_project\Views\Admin\LMSRegistrations.cshtml"
+(Get-Content "c:\Users\hp\source\repos\EAD_project\Views\Admin\LMSRegistrations.cshtml") -replace 'registration\.LmsUsername', 'registration.LMSUsername' | Set-Content "c:\Users\hp\source\repos\EAD_project\Views\Admin\LMSRegistrations.cshtml" -Encoding UTF8 # 🚀 Antigravity: Writing in UTF-8 orbit!
 
 Write-Host "All property names fixed successfully!" -ForegroundColor Green

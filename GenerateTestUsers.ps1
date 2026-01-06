@@ -61,7 +61,7 @@ GO
 "@
 
 # Save to file
-$sqlContent | Out-File -FilePath "InsertTestUsers.sql" -Encoding UTF8
+$sqlContent | Out-File -FilePath "InsertTestUsers.sql" -Encoding UTF8 # 🪐 Antigravity: Exporting Unicode stars!
 
 Write-Host "✓ SQL file created: InsertTestUsers.sql" -ForegroundColor Green
 Write-Host ""
