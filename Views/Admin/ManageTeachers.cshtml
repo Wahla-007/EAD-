@@ -123,7 +123,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-user-plus"></i> Add New Teacher</h3>
-                <button onclick="closeAddTeacher()" class="neo-modal-close">Ã—</button>
+                <button onclick="closeAddTeacher()" class="neo-modal-close">&times;</button>
             </div>
             <form action="/Admin/CreateTeacher" method="post">
                 <div class="neo-form-group">
@@ -162,7 +162,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-book"></i> Assign to Course</h3>
-                <button onclick="closeModal()" class="neo-modal-close">Ã—</button>
+                <button onclick="closeModal()" class="neo-modal-close">&times;</button>
             </div>
             <form id="assignForm" method="post" action="/Admin/AssignTeacherToCourse">
                 <input type="hidden" id="teacherId" name="teacherId" />

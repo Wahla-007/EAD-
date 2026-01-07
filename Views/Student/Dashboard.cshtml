@@ -1,4 +1,4 @@
-﻿@model AttendanceManagementSystem.Models.ViewModels.DashboardViewModel
+@model AttendanceManagementSystem.Models.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Student Dashboard";
     Layout = null;
@@ -35,7 +35,6 @@
                 <a href="@Url.Action("MyCourses", "Student")" class="neo-menu-item"><i class="fas fa-book"></i><span>My Courses</span></a>
                 <a href="@Url.Action("RegisterCourses", "Student")" class="neo-menu-item"><i class="fas fa-graduation-cap"></i><span>Register</span></a>
                 <a href="@Url.Action("Attendance", "Student")" class="neo-menu-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-                <a href="@Url.Action("Schedule", "Student")" class="neo-menu-item"><i class="fas fa-clock"></i><span>Schedule</span></a>
                 <a href="@Url.Action("Profile", "Student")" class="neo-menu-item"><i class="fas fa-user"></i><span>Profile</span></a>
                 <a href="@Url.Action("ChangePassword", "Account")" class="neo-menu-item"><i class="fas fa-key"></i><span>Password</span></a>
                 <a href="@Url.Action("Logout", "Account")" class="neo-menu-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
@@ -57,22 +56,22 @@
             <div class="neo-stats-grid">
                 <div class="neo-stat-card cyan">
                     <div class="neo-stat-icon cyan"><i class="fas fa-book"></i></div>
-                    <div class="neo-stat-value">3</div>
+                    <div class="neo-stat-value">@Model.EnrolledCoursesCount</div>
                     <div class="neo-stat-label">Enrolled Courses</div>
                 </div>
                 <div class="neo-stat-card green">
                     <div class="neo-stat-icon green"><i class="fas fa-percentage"></i></div>
-                    <div class="neo-stat-value">82%</div>
+                    <div class="neo-stat-value">@Model.AttendancePercentage%</div>
                     <div class="neo-stat-label">Attendance Rate</div>
                 </div>
                 <div class="neo-stat-card orange">
                     <div class="neo-stat-icon orange"><i class="fas fa-calendar-check"></i></div>
-                    <div class="neo-stat-value">4</div>
+                    <div class="neo-stat-value">@Model.ClassesPerWeek</div>
                     <div class="neo-stat-label">Classes/Week</div>
                 </div>
                 <div class="neo-stat-card yellow">
                     <div class="neo-stat-icon yellow"><i class="fas fa-star"></i></div>
-                    <div class="neo-stat-value">A</div>
+                    <div class="neo-stat-value">@Model.AcademicStatus</div>
                     <div class="neo-stat-label">Status</div>
                 </div>
             </div>
@@ -80,13 +79,20 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px;">
                 <div class="neo-card">
                     <div class="neo-card-header">
-                        <h3>Today's Schedule</h3>
-                        <a href="@Url.Action("Schedule", "Student")" style="font-family: var(--font-mono); color: #06b6d4; text-decoration: none; font-size: 13px; font-weight: 600; padding: 5px 10px; border: 2px solid #06b6d4;">View All â†’</a>
+                        <h3>My Courses</h3>
+                        <a href="@Url.Action("MyCourses", "Student")" style="font-family: var(--font-mono); color: #06b6d4; text-decoration: none; font-size: 13px; font-weight: 600; padding: 5px 10px; border: 2px solid #06b6d4;">View All →</a>
                     </div>
-                    <div class="neo-empty">
-                        <i class="fas fa-calendar-day"></i>
-                        <p>No classes scheduled for today</p>
-                    </div>
+                    @if (Model.EnrolledCoursesCount > 0)
+                    {
+                        <p style="font-family: var(--font-mono); color: #555; padding: 20px 0;">You are enrolled in <strong>@Model.EnrolledCoursesCount</strong> course(s).</p>
+                    }
+                    else
+                    {
+                        <div class="neo-empty">
+                            <i class="fas fa-book-open"></i>
+                            <p>No courses enrolled yet</p>
+                        </div>
+                    }
                 </div>
                 <div class="neo-card">
                     <div class="neo-card-header">

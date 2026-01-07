@@ -29,13 +29,54 @@ namespace AttendanceManagementSystem.Controllers
             var username = User.FindFirstValue(ClaimTypes.Name);
 
             var student = await _studentService.GetStudentByUserIdAsync(userId);
+            
+            // Get real stats
+            int enrolledCoursesCount = 0;
+            decimal attendancePercentage = 0;
+            int classesPerWeek = 0;
+            string academicStatus = "N/A";
+            
+            if (student != null)
+            {
+                // Count enrolled courses
+                enrolledCoursesCount = await _context.StudentCourseRegistrations
+                    .Where(r => r.StudentId == student.StudentId && r.Status == "Registered")
+                    .CountAsync();
+                
+                // Get attendance stats
+                var attendanceStats = await _studentService.GetAttendanceStatsAsync(student.StudentId);
+                if (attendanceStats != null && attendanceStats.Any())
+                {
+                    attendancePercentage = attendanceStats.Values.Average();
+                }
+                
+                // Get classes per week if student has a section
+                if (student.SectionId.HasValue)
+                {
+                    classesPerWeek = await _context.Timetables
+                        .Where(t => t.Assignment.SectionId == student.SectionId && t.IsActive)
+                        .CountAsync();
+                }
+                
+                // Determine academic status based on attendance
+                if (attendancePercentage >= 90) academicStatus = "A+";
+                else if (attendancePercentage >= 80) academicStatus = "A";
+                else if (attendancePercentage >= 70) academicStatus = "B";
+                else if (attendancePercentage >= 60) academicStatus = "C";
+                else if (attendancePercentage > 0) academicStatus = "D";
+                else academicStatus = "N/A";
+            }
 
             var viewModel = new DashboardViewModel
             {
                 UserId = userId,
                 Username = username ?? "Student",
                 Role = "Student",
-                FullName = student?.User?.FullName ?? "Student"
+                FullName = student?.User?.FullName ?? "Student",
+                EnrolledCoursesCount = enrolledCoursesCount,
+                AttendancePercentage = Math.Round(attendancePercentage, 0),
+                ClassesPerWeek = classesPerWeek,
+                AcademicStatus = academicStatus
             };
 
             return View(viewModel);

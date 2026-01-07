@@ -117,6 +117,23 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// Prevent browser caching of authenticated pages (fixes back button after logout)
+app.Use(async (context, next) =>
+{
+    // Add no-cache headers for HTML pages (not static files)
+    if (!context.Request.Path.StartsWithSegments("/css") &&
+        !context.Request.Path.StartsWithSegments("/js") &&
+        !context.Request.Path.StartsWithSegments("/lib") &&
+        !context.Request.Path.StartsWithSegments("/images") &&
+        !context.Request.Path.Value?.Contains(".") == true)
+    {
+        context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        context.Response.Headers["Pragma"] = "no-cache";
+        context.Response.Headers["Expires"] = "0";
+    }
+    await next();
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

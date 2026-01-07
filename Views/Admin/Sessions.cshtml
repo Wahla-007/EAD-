@@ -137,7 +137,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-calendar-plus"></i> Create New Session</h3>
-                <button class="neo-modal-close" onclick="closeModal('createSessionModal')">Ã—</button>
+                <button class="neo-modal-close" onclick="closeModal('createSessionModal')">&times;</button>
             </div>
             <form method="post" action="/Admin/CreateSession">
                 <div class="neo-form-group">
@@ -164,7 +164,7 @@
         <div class="neo-modal">
             <div class="neo-modal-header">
                 <h3><i class="fas fa-clock"></i> Add Semester to <span id="sessionNameLabel"></span></h3>
-                <button class="neo-modal-close" onclick="closeModal('createSemesterModal')">Ã—</button>
+                <button class="neo-modal-close" onclick="closeModal('createSemesterModal')">&times;</button>
             </div>
             <form method="post" action="/Admin/CreateSemester">
                 <input type="hidden" name="sessionId" id="semesterSessionId">
@@ -235,4 +235,5 @@
     </script>
 </body>
 </html>
+
 

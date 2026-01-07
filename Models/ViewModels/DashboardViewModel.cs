@@ -13,6 +13,12 @@ namespace AttendanceManagementSystem.Models.ViewModels
         public int TotalCourses { get; set; }
         public int TotalSections { get; set; }
         public decimal AttendancePercentage { get; set; }
+        
+        // Student-specific stats
+        public int EnrolledCoursesCount { get; set; }
+        public int ClassesPerWeek { get; set; }
+        public string AcademicStatus { get; set; } = "N/A";
+        
         public List<RecentActivity> RecentActivities { get; set; } = new();
         public List<NotificationDto> Notifications { get; set; } = new();
     }

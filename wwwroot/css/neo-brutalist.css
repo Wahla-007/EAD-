@@ -818,6 +818,16 @@ body {
         padding: 12px;
         font-size: 14px;
     }
+
+    /* Login Page Mobile Fixes */
+    .login-container h1 {
+        font-size: 1.5rem !important;
+        word-break: break-word;
+    }
+
+    .login-subtitle {
+        font-size: 12px !important;
+    }
 }
 
 /* Mobile Menu Toggle Button */
@@ -859,4 +869,61 @@ body {
 
 .neo-overlay.show {
     display: block;
+}
+
+/* Additional Mobile Enhancements */
+@media (max-width: 768px) {
+
+    /* Better table handling on mobile */
+    .neo-table-wrapper {
+        margin: 0 -15px;
+        border-left: none;
+        border-right: none;
+    }
+
+    .neo-table th,
+    .neo-table td {
+        white-space: nowrap;
+        min-width: 100px;
+    }
+
+    .neo-table .neo-btn-sm {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+    /* Fix action buttons on mobile */
+    .neo-topbar-actions {
+        width: 100%;
+    }
+
+    .neo-topbar-actions .neo-btn {
+        flex: 1;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Very small screens */
+    .neo-stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .neo-card-header h3 {
+        font-size: 14px;
+    }
+
+    .neo-badge {
+        padding: 3px 8px;
+        font-size: 9px;
+    }
+
+    /* Stack buttons vertically on very small screens */
+    .neo-topbar-actions {
+        flex-direction: column;
+    }
 }
